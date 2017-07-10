@@ -4,7 +4,7 @@
   "description": "a podcast pwa",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "now-start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,5 +22,6 @@
   },
   "homepage": "https://github.com/tolu/podspace#readme",
   "dependencies": {
+    "express": "^4.15.3"
   }
 }
