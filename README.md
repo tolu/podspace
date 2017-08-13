@@ -3,11 +3,12 @@ Podcast PWA
 
 Todo
 
-- [ ] create app shell
-- [ ] use api from audiosear.ch
+- [x] create app shell
+- [x] use api from acasts.com / audiosear.ch
 - [ ] store secrets with `now secret add ...`
-- [ ] add service worker
+- [x] add service worker
 - [ ] pwa things up
+- [ ] style like android app
 
 ### Credits
 Built using the API from  
