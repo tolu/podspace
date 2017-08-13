@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "allowJs": true,
+      "checkJs": true,
+      "lib": ["es2017", "dom"],
+      "module": "commonjs",
+      "noEmit": true,
+      "noImplicitAny": false,
+      "strictNullChecks": false,
+      "strict": true,
+      "target": "es2015",
+      "typeRoots": [
+        "typings"
+      ]
+  }
+}
