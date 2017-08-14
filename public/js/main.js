@@ -1,9 +1,7 @@
 import audioPlayer from './audioPlayer.js';
 
-const SEARCH_BASE = 'https://www.acast.com/api/search?q=';
-const RSS_BASE = 'http://rss.acast.com/';
-const POPULAR_BASE = 'https://www.acast.com/api/popular/channels';
-// https://www.acast.com/api/categories/comedy?page=0
+// https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
+const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
 
 
 // https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
@@ -22,11 +20,13 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('load', function() {
   let timeout;
   document.querySelector('input').addEventListener('keyup', event => {
-    const query = event.target.value;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      doSearch(query);
-    }, 250);
+    if(event.target instanceof HTMLInputElement) {
+      const query = event.target.value;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        doSearch(query);
+      }, 250);
+    }
   });
 });
 
@@ -39,11 +39,12 @@ function doSearch(query){
 
 /**
  * Render search result items
- * @param {SearchResults} results
+ * @param {SearchResults} json
  */
-function renderSearchResults(results){
+function renderSearchResults(json){
+  console.log('results', json);
   const resultsEl = document.querySelector('.search-results');
-  const markup = results.channels.map(channel => {
+  const markup = json.results.map(podcast => {
     return `
       <div class="result-item">
         <div class='spinner'>
@@ -53,10 +54,10 @@ function renderSearchResults(results){
           <div class='rect4'></div>
           <div class='rect5'></div>
         </div>
-        <a data-rss-id="${channel.url}" href="#">
-          <img src="${channel.imageApiUrl}">
+        <a data-rss-feed="${podcast.feedUrl}" href="#">
+          <img src="${podcast.artworkUrl600}" title="${podcast.artistName}">
         </a>
-        <div>${channel.author}</div>
+        <div>${podcast.collectionName}</div>
       </div>
     `.trim();
   }).join('\n');
@@ -68,10 +69,9 @@ document.addEventListener('click', (event) => {
   if(!(event.target instanceof HTMLElement)) {
     return;
   }
-  console.log('clicked', event.target);
-  if(event.target.matches('[data-rss-id]')) {
+  if(event.target.matches('[data-rss-feed]')) {
     event.preventDefault();
-    displayShow(event.target.getAttribute('data-rss-id'), event.target);
+    displayShow(event.target.getAttribute('data-rss-feed'), event.target);
   }
   if(event.target.matches('.play[data-url]')) {
     [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
@@ -84,11 +84,11 @@ document.addEventListener('click', (event) => {
 
 const domParser = new DOMParser();
 const parseXml = (xml) => domParser.parseFromString(xml, 'application/xml');
-function displayShow(id, el) {
-  console.info('display', id);
+function displayShow(rssFeed, el) {
+  console.info('display', rssFeed);
   const showImageUrl = el.querySelector('img').src || '';
   el.classList.add('loading');
-  fetch(`${RSS_BASE}${id}`)
+  fetch(`/rss/${encodeURIComponent(rssFeed)}`)
     .then(res => res.text())
     .then((rss) => {
       const xml = parseXml(rss);
