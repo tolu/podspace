@@ -1,13 +1,13 @@
 # podspace
-Podcast PWA
+Podspace is (will be) a Progressive Web App for podcasts.
 
-Todo
-
+### Todo
 - [x] create app shell
-- [x] use api from acasts.com / audiosear.ch
-- [ ] store secrets with `now secret add ...`
+- [ ] use itunes api for search
 - [x] add service worker
-- [ ] use NextJs 3.0 for tidyness (or?)
+- [ ] use NextJs 3.0 for tidyness (or something else?)
+- [ ] define clear caching strategy (app shell, searches, saved shows etc)
+- [ ] use streams to read and parse rss feeds
 - [ ] create player module
 - [ ] add download options for offlining media
 - [ ] add option for saving podcasts
@@ -19,9 +19,6 @@ Todo
 - [ ] add [SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis) feedback
 
 ### Credits
-Built using the API from  
-<img src="https://www.audiosear.ch/assets/logos/logo_logoMark 2-419d59011b4bbef0822d7e70aeb723a3d222b1db7e45c6962c6fde0c90af0bb6.svg"> [Audiosear.ch](https://www.audiosear.ch)
-
-Actually - I'm now using acasts.com as a source.
+Idea and inspiration from the magnificent [Podspace](https://play.google.com/store/apps/details?id=io.davidkarlsson.podspace) app by David Karlsson
 
 Deployed with [Now.sh](https://zeit.co/now)
