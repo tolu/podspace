@@ -24,6 +24,10 @@
   },
   "homepage": "https://github.com/tolu/podspace#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.36"
   }
 }
