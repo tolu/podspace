@@ -3,7 +3,7 @@ Podspace is (will be) a Progressive Web App for podcasts.
 
 ### Todo
 - [x] create app shell
-- [ ] use itunes api for search
+- [x] use itunes api for search
 - [x] add service worker
 - [ ] use NextJs 3.0 for tidyness (or something else?)
 - [ ] define clear caching strategy (app shell, searches, saved shows etc)
