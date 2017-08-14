@@ -35,20 +35,21 @@ function cacheAppShell(event) {
 
 // SETUP DATA CACHE
 self.addEventListener('fetch', event => {
-  const req = event.request;
-  const path = (new URL(req.url)).pathname;
-  if(req.method !== 'GET'){
+  const { request } = event;
+  const path = (new URL(request.url)).pathname;
+  if(request.method !== 'GET'){
     return;
   }
 
   // use network first strategy for application files
   if(appShellFiles.includes(path)){
-    return event.respondWith(networkFirstAndCacheForSlow(req, FILE_CACHE));
+    return event.respondWith(networkFirstAndCacheForSlow(request, FILE_CACHE));
   }
 
   // select cache based on url
-  const cacheKey = /acast\.com/.test(req.url) ? DATA_CACHE : FILE_CACHE;
-  event.respondWith(cacheFirst(req, cacheKey));
+  const cacheKey = /\/rss\//.test(request.url) ? DATA_CACHE : FILE_CACHE;
+
+  event.respondWith(cacheFirst(request, cacheKey));
 
   // OFFLINE METHOD 1: Assume everything pre-cached
   // OFFLINE METHOD 2: Network first, cache fallback
