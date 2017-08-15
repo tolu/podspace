@@ -1,4 +1,6 @@
 import audioPlayer from './audioPlayer.js';
+import searchResultComponent from './components/searchResultList.js';
+import showComponent from './components/show.js';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
 const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
@@ -44,24 +46,7 @@ function doSearch(query){
 function renderSearchResults(json){
   console.log('results', json);
   const resultsEl = document.querySelector('.search-results');
-  const markup = json.results.map(podcast => {
-    return `
-      <div class="result-item">
-        <div class='spinner'>
-          <div class='rect1'></div>
-          <div class='rect2'></div>
-          <div class='rect3'></div>
-          <div class='rect4'></div>
-          <div class='rect5'></div>
-        </div>
-        <a data-rss-feed="${podcast.feedUrl}" href="#">
-          <img src="${podcast.artworkUrl600}" title="${podcast.artistName}">
-        </a>
-        <div>${podcast.collectionName}</div>
-      </div>
-    `.trim();
-  }).join('\n');
-  resultsEl.innerHTML = markup;
+  resultsEl.innerHTML = searchResultComponent(json);
 }
 
 // handle search result click
@@ -95,44 +80,11 @@ function displayShow(rssFeed, el) {
       const json = xmlToJson(xml);
       return json.rss.channel;
     })
-    .then((channel) => {
+    .then((show) => {
       el.classList.remove('loading');
       const showList = document.querySelector('.show-list');
-      const markup = `
-        <div>
-          <h2><img src="${showImageUrl}" style="width:100px">&nbsp;${ channel.title }</h2>
-        <div>
-        <ul>
-          ${channel.item.slice(0,10).map(item => {
-            return renderShowItem(item);
-          }).join('\n')}
-        </ul>
-      `.trim();
-      showList.innerHTML = markup;
+      showList.innerHTML = showComponent(show, showImageUrl);
     });
-}
-
-function renderShowItem(item){
-  const daysAgo = getDaysAgoText(item.pubDate);
-  console.log(item);
-  return `
-    <li class="show-item theme-dark-item-bg">
-      <div>
-        <h3 class="show-item__title">${item.title}</h3>
-        <div class="show-item__description">${item.description}</div>
-        <div class="show-item__time">${daysAgo}</div>
-      </div>
-      <div class="play" data-url=${item.enclosure['@attributes'].url}></div>
-    </li>
-  `.trim();
-}
-
-function getDaysAgoText(dateString){
-  const msSincePublished = Date.now() - Date.parse(dateString);
-  const daysAgo = Math.floor( msSincePublished / (24*60*60*1000) );
-  if(daysAgo === 0) return 'Today';
-  if(daysAgo === 1) return 'Yesterday';
-  return `${daysAgo} days ago`;
 }
 
 function xmlToJson(xml) {
