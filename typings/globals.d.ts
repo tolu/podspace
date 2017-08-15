@@ -16,6 +16,11 @@ interface Podcast {
   releaseDate: string             //  "2017-08-14T11:00:00Z"
   collectionExplicitness: string  //  "cleaned"
   trackCount: 298
+
+  // added by us
+  items: PodEpisode[]
+
+  // ignored by us
   /*
    * artistId: 211312173
    * collectionId: 284610981
@@ -40,4 +45,21 @@ interface Podcast {
 interface SearchResults {
   resultCount: number
   results: Podcast[]
+}
+
+interface PodEpisode {
+  title: string
+  description: string
+  pubDate: string
+  enclosure: {
+    '@attributes': {
+      length: string// "57510007"
+      type: string// "audio/mpeg"
+      url: string// "http://sverigesradio.se/topsy/ljudfil/6190014.mp3"
+    }
+  }
+  // guid:"http://sverigesradio.se/sommar_i_p1_20170815_0700_36691a4.mp3"
+  // link: "http://sverigesradio.se/sida/avsnitt/927250?programid=2071"
+  // poddid:"4023"
+  // programid:"2071"
 }
