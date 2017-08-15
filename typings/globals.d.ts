@@ -2,26 +2,27 @@
 interface Podcast {
   artistName: string              //  "Sveriges Radio"
   collectionName: string          //  "Sommar & Vinter i P1"
-  trackName: string               //  "Sommar & Vinter i P1"
-  collectionCensoredName: string  //  "Sommar & Vinter i P1"
-  trackCensoredName: string       //  "Sommar & Vinter i P1"
-  artistViewUrl: string           //  "https://itunes.apple.com/us/artist/sveriges-radio/id211312173?mt=2&uo=4"
-  collectionViewUrl: string       //  "https://itunes.apple.com/us/podcast/sommar-vinter-i-p1/id284610981?mt=2&uo=4"
   feedUrl: string                 //  "http://api.sr.se/api/rss/pod/4023"
-  trackViewUrl: string            //  "https://itunes.apple.com/us/podcast/sommar-vinter-i-p1/id284610981?mt=2&uo=4"
   artworkUrl30: string            //  "http://is4.mzstatic.com/image/thumb/Music111/v4/ce/58/eb/ce58eb43-ea59-eb6d-0f22-2669f1c78d36/source/30x30bb.jpg"
   artworkUrl60: string            //  "http://is4.mzstatic.com/image/thumb/Music111/v4/ce/58/eb/ce58eb43-ea59-eb6d-0f22-2669f1c78d36/source/60x60bb.jpg"
   artworkUrl100: string           //  "http://is4.mzstatic.com/image/thumb/Music111/v4/ce/58/eb/ce58eb43-ea59-eb6d-0f22-2669f1c78d36/source/100x100bb.jpg"
   artworkUrl600: string           //  "http://is4.mzstatic.com/image/thumb/Music111/v4/ce/58/eb/ce58eb43-ea59-eb6d-0f22-2669f1c78d36/source/600x600bb.jpg"
   releaseDate: string             //  "2017-08-14T11:00:00Z"
-  collectionExplicitness: string  //  "cleaned"
   trackCount: 298
+  collectionId: number            // 284610981
 
   // added by us
   items: PodEpisode[]
 
   // ignored by us
   /*
+   * collectionExplicitness: string  //  "cleaned"
+   * trackViewUrl: string            //  "https://itunes.apple.com/us/podcast/sommar-vinter-i-p1/id284610981?mt=2&uo=4"
+   * trackName: string               //  "Sommar & Vinter i P1"
+   * collectionCensoredName: string  //  "Sommar & Vinter i P1"
+   * trackCensoredName: string       //  "Sommar & Vinter i P1"
+   * artistViewUrl: string           //  "https://itunes.apple.com/us/artist/sveriges-radio/id211312173?mt=2&uo=4"
+   * collectionViewUrl: string       //  "https://itunes.apple.com/us/podcast/sommar-vinter-i-p1/id284610981?mt=2&uo=4"
    * artistId: 211312173
    * collectionId: 284610981
    * trackId: 284610981
