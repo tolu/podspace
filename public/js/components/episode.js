@@ -1,5 +1,5 @@
 
-export default (episode) => {
+export default (/** @type {PodEpisode}*/episode) => {
   return `
     <li class="show-item theme-dark-item-bg">
       <div>
