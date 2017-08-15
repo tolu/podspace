@@ -2,13 +2,17 @@
 const domParser = new DOMParser();
 const parseXml = (xml) => domParser.parseFromString(xml, 'application/xml');
 
-export default (rssFeedUrl) => {
-  return fetch(rssFeedUrl)
+export default (rssFeed) => {
+  const feedProxyUrl = `/rss/${encodeURIComponent(rssFeed)}`;
+  return fetch(feedProxyUrl)
   .then(res => res.text())
   .then((rss) => {
     const xml = parseXml(rss);
     const json = xmlToJson(xml);
-    return json.rss.channel;
+    const show = json.rss.channel;
+    // assign feed url as id and return
+    show.id = rssFeed;
+    return show;
   });
 }
 
