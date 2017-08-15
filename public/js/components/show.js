@@ -1,12 +1,12 @@
 import episodeComponent from './episode.js';
 
-export default (show, showImageUrl) => {
+export default (/** @type {Podcast} */show) => {
   return `
   <div>
-    <h2><img src="${showImageUrl}" style="width:100px">&nbsp;${ show.title }</h2>
+    <h2><img src="${show.artworkUrl600}" style="width:100px">&nbsp;${ show.collectionName }</h2>
   <div>
   <ul>
-    ${show.item.map(episodeComponent).join('\n')}
+    ${show.items.map(episodeComponent).join('\n')}
   </ul>
 `.trim();
 };
