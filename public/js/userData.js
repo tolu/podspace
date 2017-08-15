@@ -1,4 +1,5 @@
 const SHOWS = 'pod_shows';
+const SEARCH_RESULTS = 'search_results';
 
 export const saveShow  = (showData) => {
   const shows = getShows();
@@ -20,4 +21,15 @@ export const getShows = () => {
 export const getShow = (id) => {
   const shows = getShows();
   return shows.find((s) => s.id === id);
+};
+
+
+export const setSearchResults = (results) => {
+  const dataStr = JSON.stringify(results || []);
+  localStorage.setItem(SEARCH_RESULTS, dataStr);
+};
+
+export const getSearchResult = (feedUrl) => {
+  const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]');
+  return results.find(pod => pod.feedUrl === feedUrl);
 };
