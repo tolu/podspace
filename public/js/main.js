@@ -46,9 +46,22 @@ function renderSearchResults(json){
   }
 }
 
+/**
+ * @param {Podcast|null} show 
+ */
+function renderShowFeed(show){
+  const root = document.querySelector('.show-list');  
+  if(show) {
+    show.items = userData.getShowFeed(show.collectionId);
+    root.innerHTML = showComponent(show);
+  } else {
+    root.innerHTML = '';
+  }
+}
+
 function renderUserShows(){
+  /** @type {Podcast[]} */
   const shows = userData.getShows();
-  console.info('rendering user shows', shows.length);
   const resultsEl = document.querySelector('.search-results');
   resultsEl.innerHTML = userShowsComponent(shows);
 }
@@ -61,6 +74,7 @@ document.addEventListener('click', (event) => {
   if(event.target.matches('header a')) {
     event.preventDefault();
     renderSearchResults({ resultCount: 0, results: null });
+    renderShowFeed(null);
     renderUserShows();
   }
   if(event.target.matches('.search-result .podcast a')) {
@@ -72,12 +86,7 @@ document.addEventListener('click', (event) => {
   if(event.target.matches('.user-show .podcast a')) {
     event.preventDefault();
     const feedUrl = event.target.href;
-    /** @type {Podcast} */
-    const show = userData.getShow(feedUrl);
-    if(show) {
-      show.items = userData.getShowFeed(show.collectionId);
-      document.querySelector('.show-list').innerHTML = showComponent(show);
-    }
+    renderShowFeed(userData.getShow(feedUrl));
   }
   if(event.target.matches('.play[data-url]')) {
     [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
