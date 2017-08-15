@@ -37,9 +37,13 @@ function doSearch(query){
  */
 function renderSearchResults(json){
   const {results} = json;
-  userData.setSearchResults(results);
   const resultsEl = document.querySelector('.search-results');
-  resultsEl.innerHTML = searchResultComponent(results);
+  if(results) {
+    userData.setSearchResults(results);
+    resultsEl.innerHTML = searchResultComponent(results);
+  } else {
+    resultsEl.innerHTML = '';
+  }
 }
 
 function renderUserShows(){
@@ -53,6 +57,11 @@ function renderUserShows(){
 document.addEventListener('click', (event) => {
   if(!(event.target instanceof HTMLElement)) {
     return;
+  }
+  if(event.target.matches('header a')) {
+    event.preventDefault();
+    renderSearchResults({ resultCount: 0, results: null });
+    renderUserShows();
   }
   if(event.target.matches('.search-result .podcast a')) {
     event.preventDefault();
@@ -90,5 +99,7 @@ function saveShow(show) {
       modal.hideMessage();
     });
 }
+
+
 
 registerServiceWorker();
