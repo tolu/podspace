@@ -2,23 +2,10 @@ import audioPlayer from './audioPlayer.js';
 import searchResultComponent from './components/searchResultList.js';
 import showComponent from './components/show.js';
 import rssFetcher from './rssFetcher.js';
+import registerServiceWorker from './registerServiceWorker';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
 const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
-
-
-// https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(registration => {
-      // Registration was successful
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, err => {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
 
 window.addEventListener('load', function() {
   let timeout;
@@ -80,4 +67,4 @@ function displayShow(rssFeed, el) {
     });
 }
 
-
+registerServiceWorker();
