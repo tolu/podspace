@@ -1,15 +1,16 @@
 const SHOWS = 'pod_shows';
 const SEARCH_RESULTS = 'search_results';
 
-export const saveShow  = (showData) => {
+export const saveShow  = (/** @type {Podcast}*/showData, items) => {
   const shows = getShows();
-  const show = shows.find((s) => s.id === showData.id);
+  const show = getShow(showData.feedUrl);
   if(show) {
     // we already have show - update?
     console.warn('show already in list...');
   } else {
     shows.push(showData);
   }
+  localStorage.setItem(`${showData.collectionId}`, JSON.stringify(items));
   localStorage.setItem(SHOWS, JSON.stringify(shows));
 };
 
@@ -18,11 +19,15 @@ export const getShows = () => {
   return showData ? JSON.parse(showData) : [];
 };
 
-export const getShow = (id) => {
+export const getShow = (feedUrl) => {
   const shows = getShows();
-  return shows.find((s) => s.id === id);
+  return shows.find((s) => s.feedUrl === feedUrl);
 };
 
+export const getShowFeed = (collectionId) => {
+  const items = JSON.parse( localStorage.getItem(`${collectionId}`) || '[]');
+  return items;
+};
 
 export const setSearchResults = (results) => {
   const dataStr = JSON.stringify(results || []);
