@@ -1,10 +1,17 @@
+import showPoster from './showPoster.js';
 /**
  * Render search result items
- * @param {SearchResults} data
+ * @param {Podcast[]} results
  * @return {string} html markup
  */
-export default (data) => {
-  return data.results.map(podcast => {
+export default (results) => {
+  return results.map(podcast => {
+    const {
+      feedUrl,
+      artworkUrl600: image,
+      artistName: artist,
+      collectionName: title
+    } = podcast;
     return `
       <div class="result-item">
         <div class='spinner'>
@@ -14,10 +21,7 @@ export default (data) => {
           <div class='rect4'></div>
           <div class='rect5'></div>
         </div>
-        <a data-rss-feed="${podcast.feedUrl}" href="#">
-          <img src="${podcast.artworkUrl600}" title="${podcast.artistName}">
-        </a>
-        <div>${podcast.collectionName}</div>
+        ${showPoster({feedUrl, image, artist, title})}
       </div>
     `.trim();
   }).join('\n');
