@@ -1,5 +1,6 @@
 import audioPlayer from './audioPlayer.js';
 import searchResultComponent from './components/searchResultList.js';
+import userShowsComponent from './components/userShowList.js';
 import showComponent from './components/show.js';
 import rssFetcher from './rssFetcher.js';
 import registerServiceWorker from './registerServiceWorker.js';
@@ -45,7 +46,7 @@ function renderUserShows(){
   const shows = userData.getShows();
   console.info('rendering user shows', shows.length);
   const resultsEl = document.querySelector('.search-results');
-  resultsEl.innerHTML = searchResultComponent(shows);
+  resultsEl.innerHTML = userShowsComponent(shows);
 }
 
 // handle search result click
@@ -53,11 +54,21 @@ document.addEventListener('click', (event) => {
   if(!(event.target instanceof HTMLElement)) {
     return;
   }
-  if(event.target.matches('.podcast a')) {
+  if(event.target.matches('.search-result .podcast a')) {
     event.preventDefault();
     const feedUrl = event.target.href;
     const show = userData.getSearchResult(feedUrl);
     saveShow(show);
+  }
+  if(event.target.matches('.user-show .podcast a')) {
+    event.preventDefault();
+    const feedUrl = event.target.href;
+    /** @type {Podcast} */
+    const show = userData.getShow(feedUrl);
+    if(show) {
+      show.items = userData.getShowFeed(show.collectionId);
+      document.querySelector('.show-list').innerHTML = showComponent(show);
+    }
   }
   if(event.target.matches('.play[data-url]')) {
     [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
@@ -75,8 +86,7 @@ function saveShow(show) {
   modal.displayMessage(`Saving ${show.collectionName}`);
   rssFetcher(show.feedUrl)
     .then((feedData) => {
-      show.items = feedData.item;
-      userData.saveShow(show);
+      userData.saveShow(show, feedData.item);
       modal.hideMessage();
     });
 }
