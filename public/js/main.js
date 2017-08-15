@@ -2,7 +2,9 @@ import audioPlayer from './audioPlayer.js';
 import searchResultComponent from './components/searchResultList.js';
 import showComponent from './components/show.js';
 import rssFetcher from './rssFetcher.js';
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker.js';
+import * as userData from './userData.js';
+import * as modal from './components/modal.js';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
 const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
@@ -56,14 +58,17 @@ document.addEventListener('click', (event) => {
 });
 
 function displayShow(rssFeed, el) {
-  console.info('display', rssFeed);
+  modal.displayMessage(`Saving ${rssFeed}`);
   const showImageUrl = el.querySelector('img').src || '';
   el.classList.add('loading');
-  rssFetcher(`/rss/${encodeURIComponent(rssFeed)}`)
+  rssFetcher(rssFeed)
     .then((show) => {
+      // const showList = document.querySelector('.show-list');
+      // showList.innerHTML = showComponent(show, showImageUrl);
+      show.image = showImageUrl;
+      userData.saveShow(show);
       el.classList.remove('loading');
-      const showList = document.querySelector('.show-list');
-      showList.innerHTML = showComponent(show, showImageUrl);
+      modal.hideMessage();
     });
 }
 
