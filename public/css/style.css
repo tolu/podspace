@@ -43,8 +43,8 @@ header {
   justify-content: space-around;
 }
 
-.result-item { width: 200px; position: relative; }
-.result-item a { display: block }
+.list-item { width: 200px; position: relative; }
+.list-item a { display: block }
 
 .show-list { margin: 10px; }
 .show-list ul {

@@ -13,7 +13,7 @@ export default (results) => {
       collectionName: title
     } = podcast;
     return `
-      <div class="result-item">
+      <div class="search-result list-item">
         <div class='spinner'>
           <div class='rect1'></div>
           <div class='rect2'></div>
