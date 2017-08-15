@@ -20,6 +20,7 @@ window.addEventListener('load', function() {
       }, 250);
     }
   });
+  renderUserShows();
 });
 
 function doSearch(query){
@@ -34,9 +35,17 @@ function doSearch(query){
  * @param {SearchResults} json
  */
 function renderSearchResults(json){
-  console.log('results', json);
+  const {results} = json;
+  userData.setSearchResults(results);
   const resultsEl = document.querySelector('.search-results');
-  resultsEl.innerHTML = searchResultComponent(json);
+  resultsEl.innerHTML = searchResultComponent(results);
+}
+
+function renderUserShows(){
+  const shows = userData.getShows();
+  console.info('rendering user shows', shows.length);
+  const resultsEl = document.querySelector('.search-results');
+  resultsEl.innerHTML = searchResultComponent(shows);
 }
 
 // handle search result click
@@ -44,9 +53,11 @@ document.addEventListener('click', (event) => {
   if(!(event.target instanceof HTMLElement)) {
     return;
   }
-  if(event.target.matches('[data-rss-feed]')) {
+  if(event.target.matches('.podcast a')) {
     event.preventDefault();
-    displayShow(event.target.getAttribute('data-rss-feed'), event.target);
+    const feedUrl = event.target.href;
+    const show = userData.getSearchResult(feedUrl);
+    saveShow(show);
   }
   if(event.target.matches('.play[data-url]')) {
     [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
@@ -57,17 +68,15 @@ document.addEventListener('click', (event) => {
   }
 });
 
-function displayShow(rssFeed, el) {
-  modal.displayMessage(`Saving ${rssFeed}`);
-  const showImageUrl = el.querySelector('img').src || '';
-  el.classList.add('loading');
-  rssFetcher(rssFeed)
-    .then((show) => {
-      // const showList = document.querySelector('.show-list');
-      // showList.innerHTML = showComponent(show, showImageUrl);
-      show.image = showImageUrl;
+/**
+ * @param {Podcast} show
+ */
+function saveShow(show) {
+  modal.displayMessage(`Saving ${show.collectionName}`);
+  rssFetcher(show.feedUrl)
+    .then((feedData) => {
+      show.items = feedData.item;
       userData.saveShow(show);
-      el.classList.remove('loading');
       modal.hideMessage();
     });
 }
