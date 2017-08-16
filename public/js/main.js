@@ -3,7 +3,6 @@ import searchResultComponent from './components/searchResultList.js';
 import userShowsComponent from './components/userShowList.js';
 import showComponent from './components/show.js';
 import rssFetcher from './rssFetcher.js';
-import registerServiceWorker from './registerServiceWorker.js';
 import * as userData from './userData.js';
 import * as modal from './components/modal.js';
 
@@ -108,7 +107,3 @@ function saveShow(show) {
       modal.hideMessage();
     });
 }
-
-
-
-registerServiceWorker();
