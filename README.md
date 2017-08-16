@@ -1,6 +1,11 @@
 # podspace
 Podspace is (will be) a Progressive Web App for podcasts.
 
+Available to test drive at: https://tolu.github.io/podspace
+Note that you will need to use Chrome and enable  
+*Experimental Web Platform Features* under `chrome://flags` (<- enter in address bar)
+
+
 ### Todo
 See project or issues :smiley:
 
