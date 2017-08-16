@@ -21,6 +21,13 @@ window.addEventListener('load', function() {
     }
   });
   renderUserShows();
+  window.addEventListener('online', notifyConnection);
+  window.addEventListener('offline', notifyConnection);
+  function notifyConnection(event) {
+    const addRemove = navigator.onLine ? 'remove' : 'add';
+    document.body.classList[addRemove]('offline');
+    console.warn(navigator.onLine ? 'online :)' : 'offline :(');
+  }
 });
 
 function doSearch(query){
