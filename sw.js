@@ -1,11 +1,13 @@
 const FILE_CACHE = 'file_offline_cache';
 const DATA_CACHE = 'data_cache';
+
+const swScope = location.pathname.replace('/sw.js', '');
 const appShellFiles = [
-  '/',
-  '/js/main.js',
-  '/js/audioPlayer.js',
-  '/css/style.css',
-  '/img/logo_48x48.png'
+  `${swScope}/`,
+  `${swScope}/js/main.js`,
+  `${swScope}/js/audioPlayer.js`,
+  `${swScope}/css/style.css`,
+  `${swScope}/img/logo_48x48.png`,
 ];
 
 const log = (...args) => {
