@@ -1,8 +1,44 @@
 
-const domParser = new DOMParser();
-const parseXml = (xml) => domParser.parseFromString(xml, 'application/xml');
+//const domParser = new DOMParser();
+// const parseXml = (xml) => domParser.parseFromString(xml, 'application/xml');
+
+// default count for query is 20 items, boost if needed
+const rssToJsonBasePath = 'https://api.rss2json.com/v1/api.json?api_key=s9rqg7dexqlsmnas7cuiohqoytogsff9skw3orew&count=20&rss_url=';
+// const yqlBasePath = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22{{feedUrl}}%22&format=json&diagnostics=true&callback=';
 
 export default (rssFeed) => {
+  return getViaRss2Json(rssFeed);
+  // getViaYqlQuery(rssFeed);
+  // oldNodeProxySolution(rssFeed);
+}
+
+function getViaRss2Json(rssFeed){
+  const timer = 'Rss2Json';
+  console.time(timer);
+  return fetch(`${rssToJsonBasePath}${encodeURIComponent(rssFeed)}`)
+          .then(r => r.json())
+          .then(json => {
+            console.timeEnd(timer);
+            console.info('rss2json', json);
+            return json;
+          });
+}
+/*
+function getViaYqlQuery(rssFeed) {
+  const timer = 'yql';
+  console.time(timer);
+  return fetch(yqlBasePath.replace('{{feedUrl}}', encodeURIComponent(rssFeed)))
+          .then(r => r.json())
+          .then(json => {
+            console.timeEnd(timer);
+            console.info('yql', json);
+            return json;
+          });
+}
+
+function oldNodeProxySolution(rssFeed){
+  const timer = 'NodeJsProxy';
+  console.time(timer);
   const feedProxyUrl = `/rss/${encodeURIComponent(rssFeed)}`;
   return fetch(feedProxyUrl)
   .then(res => res.text())
@@ -12,6 +48,8 @@ export default (rssFeed) => {
     const show = json.rss.channel;
     // assign feed url as id and return
     show.id = rssFeed;
+    console.timeEnd(timer);
+    console.info('nodeProxy', json);
     return show;
   });
 }
@@ -55,3 +93,4 @@ function xmlToJson(xml) {
 	}
 	return obj;
 };
+*/

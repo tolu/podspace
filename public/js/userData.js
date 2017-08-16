@@ -24,6 +24,10 @@ export const getShow = (feedUrl) => {
   return shows.find((s) => s.feedUrl === feedUrl);
 };
 
+/**
+ * @param {string} collectionId 
+ * @return {Rss2JsonItem[]}
+ */
 export const getShowFeed = (collectionId) => {
   const items = JSON.parse( localStorage.getItem(`${collectionId}`) || '[]');
   return items;

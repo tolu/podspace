@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
   }
 
   // select cache based on url
-  const cacheKey = /\/rss\//.test(request.url) ? DATA_CACHE : FILE_CACHE;
+  const cacheKey = /\/rss2json\//.test(request.url) ? DATA_CACHE : FILE_CACHE;
 
   event.respondWith(cacheFirst(request, cacheKey));
 

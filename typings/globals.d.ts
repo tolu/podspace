@@ -12,7 +12,7 @@ interface Podcast {
   collectionId: number            // 284610981
 
   // added by us
-  items: PodEpisode[]
+  items: Rss2JsonItem[]
 
   // ignored by us
   /*
@@ -48,7 +48,7 @@ interface SearchResults {
   results: Podcast[]
 }
 
-interface PodEpisode {
+interface MyRssItem {
   title: string
   description: string
   pubDate: string
@@ -64,3 +64,62 @@ interface PodEpisode {
   // poddid:"4023"
   // programid:"2071"
 }
+
+/* interfaces for using rss2json api */
+interface Rss2JsonResponse {
+  feed: {
+    author: string      // "The New York Times"
+    description: string //"This moment demands an explanation. This show is on a mission to find it. Only what you want to know, none of what you don’t. Hosted by Michael Barbaro. Powered by New York Times journalism. Twenty minutes a day, five days a week, ready by 6 a.m."
+    image: string       // "https://dfkfj8j276wwv.cloudfront.net/images/01/1b/f3/d6/011bf3d6-a448-4533-967b-e2f19e376480/7fdd4469c1b5cb3b66aa7dcc9fa21f138efe9a0310a8a269f3dcd07c83a552844fcc445ea2d53db1e55d6fb077aeaa8a1566851f8f2d8ac4349d9d23a87a69f5.jpeg"
+    link: string        // "https://art19.com/shows/the-daily"
+    title: string       // "The Daily"
+    url: string         // "http://feeds.podtrac.com/zKq6WZZLTlbM"
+  }
+  items: Rss2JsonItem[]
+}
+interface Rss2JsonItem {
+  title: string       // "Tuesday, Aug. 15, 2017",
+  pubDate: string     // "2017-08-15 09:23:24",
+  link: string        // "https://www.nytimes.com/2017/08/15/podcasts/the-daily/charlottesville-trump.html",
+  guid: string        // "gid://art19-episode-locator/V0/0wFIo1YVJg8yCsWQ8YLBNQK3qLKCWelHv3Prb8z17WY",
+  author: string      // "The New York Times",
+  thumbnail: string   // "",
+  description: string // "<p>In 2012, a woman asked if the city of Charlottesville, Va., should consider removing a statue of a Confederate general from a local park. That question set off a chain of events that led to the deadly violence on Saturday. Also, President Trump, after two days of equivocal remarks about the violence in Charlottesville, made a new statement on Monday: “Racism is evil.” Guests: Kristin Szakos, a city councillor in Charlottesville, Va.; Glenn Thrush, a White House correspondent for The Times. For more information on today’s episode, visit nytimes.com/thedaily. </p>",
+  content: string     // "<p>In 2012, a woman asked if the city of Charlottesville, Va., should consider removing a statue of a Confederate general from a local park. That question set off a chain of events that led to the deadly violence on Saturday. Also, President Trump, after two days of equivocal remarks about the violence in Charlottesville, made a new statement on Monday: “Racism is evil.” Guests: Kristin Szakos, a city councillor in Charlottesville, Va.; Glenn Thrush, a White House correspondent for The Times. For more information on today’s episode, visit nytimes.com/thedaily. </p>",
+  enclosure: {
+    link: string // "https://dts.podtrac.com/redirect.mp3/rss.art19.com/episodes/39743a3f-8c66-497f-af60-a48cc5b73cc7.mp3",
+    type: string // "audio/mpeg",
+    length: number // 19612734,
+    duration: number // 1255,
+    // "rating": { "scheme": "urn:itunes", "value": "no" }
+  },
+  // "categories": []
+}
+
+/* yql query interfaces */
+/*
+interface YqlJsonResponse {
+  query: {
+    count: number
+    results: {
+      item: YqlJsonItem[]
+    }
+  }
+}
+interface YqlJsonItem {
+  title: string //  "Tuesday, Aug. 15, 2017",
+  description: string //  "<p>In 2012, a woman asked if the city of Charlottesville, Va., should consider removing a statue of a Confederate general from a local park. That question set off a chain of events that led to the deadly violence on Saturday. Also, President Trump, after two days of equivocal remarks about the violence in Charlottesville, made a new statement on Monday: “Racism is evil.” Guests: Kristin Szakos, a city councillor in Charlottesville, Va.; Glenn Thrush, a White House correspondent for The Times. For more information on today’s episode, visit nytimes.com/thedaily.&nbsp;</p>",
+  summary: string //  "<p>In 2012, a woman asked if the city of Charlottesville, Va., should consider removing a statue of a Confederate general from a local park. That question set off a chain of events that led to the deadly violence on Saturday. Also, President Trump, after two days of equivocal remarks about the violence in Charlottesville, made a new statement on Monday: “Racism is evil.” Guests: Kristin Szakos, a city councillor in Charlottesville, Va.; Glenn Thrush, a White House correspondent for The Times. For more information on today’s episode, visit nytimes.com/thedaily.&nbsp;</p>",
+  pubDate: string // "Tue, 15 Aug 2017 09:23:24 -0000",
+  link: string // "https://www.nytimes.com/2017/08/15/podcasts/the-daily/charlottesville-trump.html",
+  image: {
+    href: string // "https://dfkfj8j276wwv.cloudfront.net/images/01/1b/f3/d6/011bf3d6-a448-4533-967b-e2f19e376480/7fdd4469c1b5cb3b66aa7dcc9fa21f138efe9a0310a8a269f3dcd07c83a552844fcc445ea2d53db1e55d6fb077aeaa8a1566851f8f2d8ac4349d9d23a87a69f5.jpeg"
+  },
+  duration: string // "00:20:55",
+  enclosure: {
+    length: string // "19612734",
+    type: string // "audio/mpeg",
+    url: string // "https://dts.podtrac.com/redirect.mp3/rss.art19.com/episodes/39743a3f-8c66-497f-af60-a48cc5b73cc7.mp3"
+  }
+}
+*/

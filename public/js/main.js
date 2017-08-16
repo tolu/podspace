@@ -52,7 +52,7 @@ function renderSearchResults(json){
 function renderShowFeed(show){
   const root = document.querySelector('.show-list');  
   if(show) {
-    show.items = userData.getShowFeed(show.collectionId);
+    show.items = userData.getShowFeed(`${show.collectionId}`);
     root.innerHTML = showComponent(show);
   } else {
     root.innerHTML = '';
@@ -103,8 +103,8 @@ document.addEventListener('click', (event) => {
 function saveShow(show) {
   modal.displayMessage(`Saving ${show.collectionName}`);
   rssFetcher(show.feedUrl)
-    .then((feedData) => {
-      userData.saveShow(show, feedData.item);
+    .then((/** @type {Rss2JsonResponse} */feedData) => {
+      userData.saveShow(show, feedData.items);
       modal.hideMessage();
     });
 }
