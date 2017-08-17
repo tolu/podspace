@@ -5,9 +5,10 @@ import showComponent from './components/show.js';
 import rssFetcher from './rssFetcher.js';
 import * as userData from './userData.js';
 import * as modal from './components/modal.js';
+import apiClient from './audiosearchClient.js';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
-const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
+// const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
 
 window.addEventListener('load', function() {
   let timeout;
@@ -31,10 +32,13 @@ window.addEventListener('load', function() {
 });
 
 function doSearch(query){
-  const escapedQuery = encodeURIComponent(query);
-  fetch(`${SEARCH_BASE}${escapedQuery}`)
-    .then((res) => res.json())
-    .then((json) => renderSearchResults(json));
+  apiClient.search(query).then((results) => {
+    console.log('RESULTS', results);
+  }).catch(console.error);
+  // const escapedQuery = encodeURIComponent(query);
+  // fetch(`${SEARCH_BASE}${escapedQuery}`)
+  //   .then((res) => res.json())
+  //   .then((json) => renderSearchResults(json));
 }
 
 /**
