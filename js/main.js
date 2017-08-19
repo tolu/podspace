@@ -29,6 +29,8 @@ window.addEventListener('load', function() {
   function notifyConnection(event) {
     const addRemove = navigator.onLine ? 'remove' : 'add';
     document.body.classList[addRemove]('offline');
+    document.querySelector('input').disabled = !navigator.onLine;
+    document.querySelector('input').placeholder = navigator.onLine ? 'Search...' : 'Offline...';
     console.warn(navigator.onLine ? 'online :)' : 'offline :(');
   }
 });

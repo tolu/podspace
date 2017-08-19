@@ -38,6 +38,7 @@ a.no-link {
   justify-content: center;
 }
 .search-box input { font-size: 20px }
+.search-box input[disabled] { background-color: #aaa }
 
 .search-results {
   margin: 20px 0;
