@@ -4,6 +4,7 @@ const DATA_CACHE = 'data_cache';
 const swScope = location.pathname.replace('/sw.js', '');
 const appShellFiles = [
   `${swScope}/`,
+  `${swScope}/config/config.json`,
   `${swScope}/js/main.js`,
   `${swScope}/js/audioPlayer.js`,
   `${swScope}/css/style.css`,
