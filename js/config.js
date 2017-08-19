@@ -1,7 +1,7 @@
 // read config from localStorage and assign with data from network
 const KEY = 'podspace_config';
 const config = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
-const promise = fetch('../config/config.json')
+const promise = fetch('config/config.json')
   .then(res => res.json())
   .then(configData => {
     const env = /localhost/i.test(location.hostname) ?  'dev' : 'prod';
