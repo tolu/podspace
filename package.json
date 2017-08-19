@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "now-start": "node index.js",
-    "start": "http-server",
+    "start": "micro & http-server",
     "deploy": "now --public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +23,10 @@
     "url": "https://github.com/tolu/podspace/issues"
   },
   "homepage": "https://github.com/tolu/podspace#readme",
-  "dependencies": {},
+  "dependencies": {
+    "micro": "latest",
+    "node-fetch": "latest"
+  },
   "devDependencies": {
     "http-server": "^0.10.0"
   }
