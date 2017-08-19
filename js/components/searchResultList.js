@@ -4,13 +4,14 @@ import showPoster from './showPoster.js';
  * @param {Podcast[]} results
  * @return {string} html markup
  */
-export default (results) => {
+export const component = (results) => {
   return results.map(podcast => {
+    console.info({podcast});
+    const image = getImage(podcast);
+    const artist = (podcast.network || {name:''}).name;
     const {
-      feedUrl,
-      artworkUrl600: image,
-      artistName: artist,
-      collectionName: title
+      rss_url: feedUrl,
+      title
     } = podcast;
     return `
       <div class="search-result list-item">
@@ -26,3 +27,16 @@ export default (results) => {
     `.trim();
   }).join('\n');
 };
+export default component;
+
+/**
+ * @param {Podcast} pod 
+ */
+function getImage(pod){
+  if(pod.image_files && pod.image_files.length){
+    return pod.image_files[0].file.thumb.url;
+  }
+  if(pod.image_urls){
+    return pod.image_urls.thumb;
+  }
+}

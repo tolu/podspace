@@ -32,13 +32,12 @@ window.addEventListener('load', function() {
 });
 
 function doSearch(query){
+  if(!query || query.length <= 2) {
+    return;
+  }
   apiClient.search(query).then((results) => {
-    console.log('RESULTS', results);
+    renderSearchResults(results);
   }).catch(console.error);
-  // const escapedQuery = encodeURIComponent(query);
-  // fetch(`${SEARCH_BASE}${escapedQuery}`)
-  //   .then((res) => res.json())
-  //   .then((json) => renderSearchResults(json));
 }
 
 /**
@@ -47,6 +46,7 @@ function doSearch(query){
  */
 function renderSearchResults(json){
   const {results} = json;
+  console.info(results);
   const resultsEl = document.querySelector('.search-results');
   if(results) {
     userData.setSearchResults(results);
@@ -60,9 +60,9 @@ function renderSearchResults(json){
  * @param {Podcast|null} show 
  */
 function renderShowFeed(show){
-  const root = document.querySelector('.show-list');  
+  const root = document.querySelector('.show-list');
   if(show) {
-    show.items = userData.getShowFeed(`${show.collectionId}`);
+    show.items = userData.getShowFeed(`${show.id}`);
     root.innerHTML = showComponent(show);
   } else {
     root.innerHTML = '';
@@ -70,7 +70,6 @@ function renderShowFeed(show){
 }
 
 function renderUserShows(){
-  /** @type {Podcast[]} */
   const shows = userData.getShows();
   const resultsEl = document.querySelector('.search-results');
   resultsEl.innerHTML = userShowsComponent(shows);
@@ -83,7 +82,7 @@ document.addEventListener('click', (event) => {
   }
   if(event.target.matches('header a')) {
     event.preventDefault();
-    renderSearchResults({ resultCount: 0, results: null });
+    renderSearchResults({ results: null, page: 0, results_per_page: 0, total_results: 0 });
     renderShowFeed(null);
     renderUserShows();
   }
@@ -111,9 +110,9 @@ document.addEventListener('click', (event) => {
  * @param {Podcast} show
  */
 function saveShow(show) {
-  modal.displayMessage(`Saving ${show.collectionName}`);
-  rssFetcher(show.feedUrl)
-    .then((/** @type {Rss2JsonResponse} */feedData) => {
+  modal.displayMessage(`Saving ${show.title}`);
+  rssFetcher(show.rss_url)
+    .then((feedData) => {
       userData.saveShow(show, feedData.items);
       modal.hideMessage();
     });
