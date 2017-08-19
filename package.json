@@ -7,8 +7,10 @@
     "micro": "cd ./packages/token_service && npm start",
     "start": "http-server & npm run micro",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "cd ./packages/token_service && npm i"
+    "preinstall": "cd ./packages/token_service && npm i",
+    "pre-commit": "echo 'Pre commit checks...'"
   },
+  "pre-commit": ["pre-commit"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tolu/podspace.git"
@@ -25,6 +27,7 @@
   "homepage": "https://github.com/tolu/podspace#readme",
   "dependencies": {},
   "devDependencies": {
-    "http-server": "^0.10.0"
+    "http-server": "^0.10.0",
+    "pre-commit": "^1.2.2"
   }
 }
