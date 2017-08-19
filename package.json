@@ -6,11 +6,14 @@
   "scripts": {
     "micro": "cd ./packages/token_service && npm start",
     "start": "http-server & npm run micro",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "cd ./packages/token_service && npm i",
     "pre-commit": "echo 'Pre commit checks...'"
   },
-  "pre-commit": ["pre-commit"],
+  "pre-commit": [
+    "pre-commit"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tolu/podspace.git"
@@ -27,7 +30,10 @@
   "homepage": "https://github.com/tolu/podspace#readme",
   "dependencies": {},
   "devDependencies": {
+    "awesome-typescript-loader": "^3.2.3",
     "http-server": "^0.10.0",
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
   }
 }
