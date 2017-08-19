@@ -4,7 +4,7 @@ const SEARCH_RESULTS = 'search_results';
 /**
  * 
  * @param {Podcast} showData 
- * @param {Rss2JsonItem[]} items
+ * @param {Episode[]} items
  */
 export const saveShow  = (showData, items) => {
   const shows = getShows();
@@ -37,7 +37,7 @@ export const getShow = (feedUrl) => {
 
 /**
  * @param {string} id 
- * @return {Rss2JsonItem[]}
+ * @return {Episode[]}
  */
 export const getShowFeed = (id) => {
   const items = JSON.parse( localStorage.getItem(`${id}`) || '[]');

@@ -2,13 +2,15 @@ import audioPlayer from './audioPlayer.js';
 import searchResultComponent from './components/searchResultList.js';
 import userShowsComponent from './components/userShowList.js';
 import showComponent from './components/show.js';
-import rssFetcher from './rssFetcher.js';
 import * as userData from './userData.js';
 import * as modal from './components/modal.js';
-import apiClient from './audiosearchClient.js';
+import apiClient from './audioSearchClient.js';
+import {ready} from './config.js';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
 // const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
+
+ready().then(_ => console.info('CONFIG LOADED!'));
 
 window.addEventListener('load', function() {
   let timeout;
@@ -57,13 +59,13 @@ function renderSearchResults(json){
 }
 
 /**
- * @param {Podcast|null} show 
+ * @param {Podcast|null} podcast 
  */
-function renderShowFeed(show){
+function renderShowFeed(podcast){
   const root = document.querySelector('.show-list');
-  if(show) {
-    show.items = userData.getShowFeed(`${show.id}`);
-    root.innerHTML = showComponent(show);
+  if(podcast) {
+    podcast.items = userData.getShowFeed(`${podcast.id}`);
+    root.innerHTML = showComponent(podcast);
   } else {
     root.innerHTML = '';
   }
@@ -88,12 +90,14 @@ document.addEventListener('click', (event) => {
   }
   if(event.target.matches('.search-result .podcast a')) {
     event.preventDefault();
+    // @ts-ignore
     const feedUrl = event.target.href;
     const show = userData.getSearchResult(feedUrl);
     saveShow(show);
   }
   if(event.target.matches('.user-show .podcast a')) {
     event.preventDefault();
+    // @ts-ignore
     const feedUrl = event.target.href;
     renderShowFeed(userData.getShow(feedUrl));
   }
@@ -111,9 +115,9 @@ document.addEventListener('click', (event) => {
  */
 function saveShow(show) {
   modal.displayMessage(`Saving ${show.title}`);
-  rssFetcher(show.rss_url)
-    .then((feedData) => {
-      userData.saveShow(show, feedData.items);
+  apiClient.getEpisodes(`${show.id}`)
+    .then((episodes) => {
+      userData.saveShow(show, episodes);
       modal.hideMessage();
     });
 }

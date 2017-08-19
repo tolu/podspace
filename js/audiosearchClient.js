@@ -34,11 +34,31 @@ function get(path){
 class AudioSearchClient {
   /**
    * @param {string} query 
-   * @returns {Promise<AudioSearchResults>}
+   * @returns {Promise<SearchResults>}
    * @memberof AudioSearchClient
    */
-  search(query){
-    return get(`/search/shows/${encodeURI(query)}`);
+  search(query) {
+    const timer = 'audioSearch';
+    console.time(timer);
+    return get(`/search/shows/${encodeURI(query)}`)
+      .then(data => {
+        console.timeEnd(timer);
+        return data;
+      });
+  }
+  /**
+   * @param {string} show_id 
+   * @returns {Promise<Episode[]>}
+   * @memberof AudioSearchClient
+   */
+  getEpisodes(show_id){
+    const timer = 'getEpisodes';
+    console.time(timer);
+    return get(`shows/${show_id}/episodes`)
+      .then(data => {
+        console.timeEnd(timer);
+        return data;
+      });
   }
 }
 

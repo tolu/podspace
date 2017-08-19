@@ -1,21 +1,16 @@
 
-export default (/** @type {Rss2JsonItem}*/episode) => {
+export default (/** @type {Episode}*/episode) => {
+  const audio = episode.audio_files[0];
   return `
     <li class="show-item theme-dark-item-bg">
       <div>
         <h3 class="show-item__title">${episode.title}</h3>
         <div class="show-item__description">${episode.description}</div>
-        <div class="show-item__time">${getDaysAgoText(episode.pubDate)} - <small>${secondsToHHMMSS(episode.enclosure.duration)}</small></div>
+        <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
       </div>
-      <div class="play" data-url=${episode.enclosure.link}></div>
+      <div class="play" data-url=${audio.mp3}></div>
     </li>
   `.trim();
-}
-
-function secondsToHHMMSS(duration) {
-  const min = Math.floor(duration / 60);
-  const seconds = duration - (min*60);
-  return `${pad(min)}m${pad(seconds)}s`;
 }
 
 function pad(number){
