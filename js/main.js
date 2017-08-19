@@ -2,12 +2,15 @@ import audioPlayer from './audioPlayer.js';
 import searchResultComponent from './components/searchResultList.js';
 import userShowsComponent from './components/userShowList.js';
 import showComponent from './components/show.js';
-import rssFetcher from './rssFetcher.js';
 import * as userData from './userData.js';
 import * as modal from './components/modal.js';
+import apiClient from './audioSearchClient.js';
+import {ready} from './config.js';
 
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
-const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
+// const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
+
+ready().then(_ => console.info('CONFIG LOADED!'));
 
 window.addEventListener('load', function() {
   let timeout;
@@ -31,10 +34,12 @@ window.addEventListener('load', function() {
 });
 
 function doSearch(query){
-  const escapedQuery = encodeURIComponent(query);
-  fetch(`${SEARCH_BASE}${escapedQuery}`)
-    .then((res) => res.json())
-    .then((json) => renderSearchResults(json));
+  if(!query || query.length <= 2) {
+    return;
+  }
+  apiClient.search(query).then((results) => {
+    renderSearchResults(results);
+  }).catch(console.error);
 }
 
 /**
@@ -43,6 +48,7 @@ function doSearch(query){
  */
 function renderSearchResults(json){
   const {results} = json;
+  console.info(results);
   const resultsEl = document.querySelector('.search-results');
   if(results) {
     userData.setSearchResults(results);
@@ -53,20 +59,19 @@ function renderSearchResults(json){
 }
 
 /**
- * @param {Podcast|null} show 
+ * @param {Podcast|null} podcast 
  */
-function renderShowFeed(show){
-  const root = document.querySelector('.show-list');  
-  if(show) {
-    show.items = userData.getShowFeed(`${show.collectionId}`);
-    root.innerHTML = showComponent(show);
+function renderShowFeed(podcast){
+  const root = document.querySelector('.show-list');
+  if(podcast) {
+    podcast.items = userData.getShowFeed(`${podcast.id}`);
+    root.innerHTML = showComponent(podcast);
   } else {
     root.innerHTML = '';
   }
 }
 
 function renderUserShows(){
-  /** @type {Podcast[]} */
   const shows = userData.getShows();
   const resultsEl = document.querySelector('.search-results');
   resultsEl.innerHTML = userShowsComponent(shows);
@@ -79,18 +84,20 @@ document.addEventListener('click', (event) => {
   }
   if(event.target.matches('header a')) {
     event.preventDefault();
-    renderSearchResults({ resultCount: 0, results: null });
+    renderSearchResults({ results: null, page: 0, results_per_page: 0, total_results: 0 });
     renderShowFeed(null);
     renderUserShows();
   }
   if(event.target.matches('.search-result .podcast a')) {
     event.preventDefault();
+    // @ts-ignore
     const feedUrl = event.target.href;
     const show = userData.getSearchResult(feedUrl);
     saveShow(show);
   }
   if(event.target.matches('.user-show .podcast a')) {
     event.preventDefault();
+    // @ts-ignore
     const feedUrl = event.target.href;
     renderShowFeed(userData.getShow(feedUrl));
   }
@@ -107,10 +114,10 @@ document.addEventListener('click', (event) => {
  * @param {Podcast} show
  */
 function saveShow(show) {
-  modal.displayMessage(`Saving ${show.collectionName}`);
-  rssFetcher(show.feedUrl)
-    .then((/** @type {Rss2JsonResponse} */feedData) => {
-      userData.saveShow(show, feedData.items);
+  modal.displayMessage(`Saving ${show.title}`);
+  apiClient.getEpisodes(`${show.id}`)
+    .then((episodes) => {
+      userData.saveShow(show, episodes);
       modal.hideMessage();
     });
 }

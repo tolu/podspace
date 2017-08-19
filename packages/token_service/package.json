@@ -1,13 +1,13 @@
 {
   "name": "podspace-pwa",
   "version": "1.0.0",
-  "description": "a podcast pwa",
+  "description": "a token service for audiosear.ch",
   "main": "index.js",
   "scripts": {
-    "micro": "cd ./packages/token_service && npm start",
-    "start": "http-server & npm run micro",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "cd ./packages/token_service && npm i"
+    "now-start": "micro",
+    "start": "micro",
+    "deploy": "now -e NODE_ENV=production --public",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,8 @@
     "url": "https://github.com/tolu/podspace/issues"
   },
   "homepage": "https://github.com/tolu/podspace#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "http-server": "^0.10.0"
+  "dependencies": {
+    "micro": "latest",
+    "node-fetch": "latest"
   }
 }

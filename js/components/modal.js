@@ -1,4 +1,4 @@
-
+/** @type {HTMLElement} */
 const modal = document.querySelector('.modal');
 export const displayMessage = (message, close) => {
   const messageEl = modal.querySelector('.modal__message');

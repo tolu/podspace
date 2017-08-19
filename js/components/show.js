@@ -1,12 +1,30 @@
 import episodeComponent from './episode.js';
 
-export default (/** @type {Podcast} */show) => {
+/**
+ * 
+ * @param {Podcast} show 
+ */
+export const component = (show) => {
+  const image = getImage(show);
   return `
   <div>
-    <h2><img src="${show.artworkUrl600}" style="width:100px">&nbsp;${ show.collectionName }</h2>
+    <h2><img src="${image}" style="width:100px">&nbsp;${ show.title }</h2>
   <div>
   <ul>
     ${show.items.map(episodeComponent).join('\n')}
   </ul>
 `.trim();
 };
+export default component;
+
+/**
+ * @param {Podcast} pod 
+ */
+function getImage(pod){
+  if(pod.image_files && pod.image_files.length){
+    return pod.image_files[0].file.thumb.url;
+  }
+  if(pod.image_urls){
+    return pod.image_urls.thumb;
+  }
+}
