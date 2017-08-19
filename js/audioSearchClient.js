@@ -1,10 +1,11 @@
 // based on https://github.com/popuparchive/audiosearch-client-node/blob/master/index.js
 import config from './config.js';
-
+config.get('token')
 const host = config.get.bind(null, 'audio_service');
 
 function authorize(){
-  return fetch('http://localhost:3000/token').then(res => res.json()).then((res) => {
+  const tokenService = config.get('token_service');
+  return fetch(`${tokenService}/token`).then(res => res.json()).then((res) => {
     console.log('Got access token...', res);
     config.set('token', res.access_token);
     return res.access_token;
