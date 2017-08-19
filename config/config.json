@@ -1,4 +1,10 @@
 {
-  "token_service": "http://localhost:3000",
-  "audio_service": "https://www.audiosear.ch"
+  "dev": {
+    "token_service": "http://localhost:3000",
+    "audio_service": "https://www.audiosear.ch"
+  },
+  "prod": {
+    "token_service": "https://podspace-pwa.now.sh",
+    "audio_service": "https://www.audiosear.ch"
+  }
 }

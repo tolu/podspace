@@ -40,7 +40,7 @@ class AudioSearchClient {
   search(query) {
     const timer = 'audioSearch';
     console.time(timer);
-    return get(`/search/shows/${encodeURI(query)}`)
+    return get(`search/shows/${encodeURI(query)}`)
       .then(data => {
         console.timeEnd(timer);
         return data;

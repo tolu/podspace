@@ -50,8 +50,9 @@ self.addEventListener('fetch', event => {
   if(request.method !== 'GET') {
     return;
   }
-  if(/\/token/.test(request.url)) {
-    return;
+  if(/(\/token)|(\.mp3)$/.test(request.url)) {
+    info(`skipping sw cache for ${request.url}`);
+    return fetch(request);
   }
 
   // use network first strategy for application files

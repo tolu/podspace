@@ -4,7 +4,8 @@ const config = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
 const promise = fetch('../config/config.json')
   .then(res => res.json())
   .then(configData => {
-    Object.assign(config, configData);
+    const env = /localhost/i.test(location.hostname) ?  'dev' : 'prod';
+    Object.assign(config, configData[env]);
     return config;
   });
 

@@ -27,8 +27,9 @@ function auth(){
 }
 
 module.exports = async (req, res) => {
-  if(/^\/token/.test(req.url)) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+  const validHost = /localhost|tolu\.github\.io/.test(req.headers.origin);
+  if(validHost && /^\/token/.test(req.url)) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
     return auth();
   }
   else {
