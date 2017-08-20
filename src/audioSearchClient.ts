@@ -12,11 +12,11 @@ async function authorize(){
   return data.access_token;
 }
 
-function base64Encode(str){
+function base64Encode(str: string){
   return btoa(str);
 }
 
-async function get(path){
+async function get(path: string){
   var url = `${host()}/api/${path}`;
   var options = {
     method: 'GET',
@@ -34,27 +34,17 @@ async function get(path){
 }
 
 class AudioSearchClient {
-  /**
-   * @param {string} query
-   * @returns {Promise<SearchResults>}
-   * @memberof AudioSearchClient
-   */
-  async search(query) {
+  async search(query: string) {
     const timer = 'audioSearch';
     console.time(timer);
-    const data = await get(`search/shows/${encodeURI(query)}`);
+    const data = await get(`search/shows/${encodeURI(query)}`) as SearchResults;
     console.timeEnd(timer);
     return data;
   }
-  /**
-   * @param {string} show_id
-   * @returns {Promise<Episode[]>}
-   * @memberof AudioSearchClient
-   */
-  async getEpisodes(show_id){
+  async getEpisodes(show_id: string){
     const timer = 'getEpisodes';
     console.time(timer);
-    const data = await get(`shows/${show_id}/episodes`);
+    const data = await get(`shows/${show_id}/episodes`) as Episode[];
     console.timeEnd(timer);
     return data;
   }

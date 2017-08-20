@@ -12,7 +12,7 @@ import {ready} from './config.js';
 
 ready().then(_ => console.info('CONFIG LOADED!'));
 
-function onConnectionChanged(event) {
+function onConnectionChanged() {
   const online = navigator.onLine;
   document.body.classList[online ? 'remove' : 'add']('offline');
   document.querySelector('input').disabled = !online;
@@ -23,14 +23,13 @@ onConnectionChanged();
 
 window.addEventListener('load', function() {
   let timeout;
-  document.querySelector('input').addEventListener('keyup', event => {
-    if(event.target instanceof HTMLInputElement) {
-      const query = event.target.value;
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        doSearch(query);
-      }, 250);
-    }
+  const input = document.querySelector('input');
+  input.addEventListener('keyup', event => {
+    const query = input.value;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      doSearch(query);
+    }, 250);
   });
   renderUserShows();
   window.addEventListener('online', onConnectionChanged);
@@ -45,11 +44,7 @@ async function doSearch(query){
   renderSearchResults(results);
 }
 
-/**
- * Render search result items
- * @param {SearchResults} json
- */
-function renderSearchResults(json){
+function renderSearchResults(json: SearchResults){
   const {results} = json;
   console.info(results);
   const resultsEl = document.querySelector('.search-results');
@@ -61,10 +56,7 @@ function renderSearchResults(json){
   }
 }
 
-/**
- * @param {Podcast|null} podcast
- */
-function renderShowFeed(podcast){
+function renderShowFeed(podcast?: Podcast){
   const root = document.querySelector('.show-list');
   if(podcast) {
     podcast.items = userData.getShowFeed(`${podcast.id}`);
@@ -94,14 +86,14 @@ document.addEventListener('click', (event) => {
   if(event.target.matches('.search-result .podcast a')) {
     event.preventDefault();
     // @ts-ignore
-    const feedUrl = event.target.href;
+    const feedUrl = (event.target as HTMLLinkElement).href;
     const show = userData.getSearchResult(feedUrl);
     saveShow(show);
   }
   if(event.target.matches('.user-show .podcast a')) {
     event.preventDefault();
     // @ts-ignore
-    const feedUrl = event.target.href;
+    const feedUrl = (event.target as HTMLLinkElement).href;
     renderShowFeed(userData.getShow(feedUrl));
   }
   if(event.target.matches('.play[data-url]')) {
@@ -113,10 +105,7 @@ document.addEventListener('click', (event) => {
   }
 });
 
-/**
- * @param {Podcast} show
- */
-async function saveShow(show) {
+async function saveShow(show: Podcast) {
   modal.displayMessage(`Saving ${show.title}`);
   const episodes = await apiClient.getEpisodes(`${show.id}`);
   userData.saveShow(show, episodes);

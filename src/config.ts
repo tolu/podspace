@@ -1,6 +1,6 @@
 // read config from localStorage and assign with data from network
 const KEY = 'podspace_config';
-const config = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
+const config = JSON.parse(localStorage.getItem(KEY) || '{}');
 const promise = (async function getConfig() {
   const res = await fetch(`${location.href}config/config.json`);
   const configData = await res.json();
