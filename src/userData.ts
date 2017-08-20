@@ -1,12 +1,7 @@
 const SHOWS = 'pod_shows';
 const SEARCH_RESULTS = 'search_results';
 
-/**
- * 
- * @param {Podcast} showData 
- * @param {Episode[]} items
- */
-export const saveShow  = (showData, items) => {
+export const saveShow  = (showData: Podcast, items: Episode[]) => {
   const shows = getShows();
   const show = getShow(showData.rss_url);
   if(show) {
@@ -19,45 +14,27 @@ export const saveShow  = (showData, items) => {
   localStorage.setItem(SHOWS, JSON.stringify(shows));
 };
 
-/**
- * @return {Podcast[]}
- */
 export const getShows = () => {
   const showData = localStorage.getItem(SHOWS);
-  return showData ? JSON.parse(showData) : [];
+  return JSON.parse(showData || '[]') as Podcast[];
 };
 
-/**
- * @return {Podcast}
- */
 export const getShow = (feedUrl) => {
   const shows = getShows();
   return shows.find((s) => s.rss_url === feedUrl);
 };
 
-/**
- * @param {string} id 
- * @return {Episode[]}
- */
-export const getShowFeed = (id) => {
+export const getShowFeed = (id: string) => {
   const items = JSON.parse( localStorage.getItem(`${id}`) || '[]');
-  return items;
+  return items as Episode[];
 };
 
-/**
- * @param {Podcast[]} results 
- */
-export const setSearchResults = (results) => {
+export const setSearchResults = (results: Podcast[]) => {
   const dataStr = JSON.stringify(results || []);
   localStorage.setItem(SEARCH_RESULTS, dataStr);
 };
 
-/**
- * @param {string} feedUrl 
- * @returns {Podcast}
- */
-export const getSearchResult = (feedUrl) => {
-  /** @type {Podcast[]} */
-  const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]');
+export const getSearchResult = (feedUrl: string) => {
+  const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]') as Podcast[];
   return results.find(pod => pod.rss_url === feedUrl);
 };

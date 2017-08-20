@@ -1,23 +1,11 @@
-//@ts-nocheck
+
 const path = require('path');
 module.exports = {
-  entry: "./js/main.js",
+  entry: {
+    js: './dist/main.js'
+  },
   output: {
-      filename: "bundle.js",
+      filename: 'es6_bundle.js',
       path: path.resolve(__dirname, 'dist')
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js']
-  },
-  module: {
-      rules: [{
-        test: /\.[jt]s$/,
-        use: [{
-          loader: "awesome-typescript-loader",
-          options: {
-            transpileOnly: true
-          }
-        }] // ts-loader | awesome-typescript-loader
-      }]
   }
 }

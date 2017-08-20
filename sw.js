@@ -3,12 +3,18 @@ const DATA_CACHE = 'data_cache';
 
 const swScope = location.pathname.replace('/sw.js', '');
 const appShellFiles = [
+  // HTML
   `${swScope}/`,
-  `${swScope}/config/config.json`,
-  `${swScope}/js/main.js`,
-  `${swScope}/js/audioPlayer.js`,
+  // CSS etc
   `${swScope}/css/style.css`,
   `${swScope}/img/logo_48x48.png`,
+  // CONFIG
+  `${swScope}/config/config.json`,
+  // JS BUNDLE
+  `${swScope}/dist/es6_bundle.js`,
+  // JS FILES
+  `${swScope}/dist/main.js`,
+  `${swScope}/dist/audioPlayer.js`,
 ];
 
 const log = (...args) => {

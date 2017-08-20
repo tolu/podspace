@@ -87,16 +87,26 @@
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 // read config from localStorage and assign with data from network
 const KEY = 'podspace_config';
-const config = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
-const promise = fetch(`${location.href}config/config.json`)
-    .then(res => res.json())
-    .then(configData => {
-    const env = /localhost/i.test(location.hostname) ? 'dev' : 'prod';
-    Object.assign(config, configData[env]);
-    return config;
-});
+const config = JSON.parse(localStorage.getItem(KEY) || '{}');
+const promise = (function getConfig() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield fetch(`${location.href}config/config.json`);
+        const configData = yield res.json();
+        const env = /localhost/i.test(location.hostname) ? 'dev' : 'prod';
+        Object.assign(config, configData[env]);
+        return config;
+    });
+}());
 const get = (key) => {
     return config[key];
 };
@@ -131,6 +141,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config_js__ = __webpack_require__(1);
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
@@ -142,40 +160,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/
 // const SEARCH_BASE = '//itunes.apple.com/search?media=podcast&entity=podcast&limit=25&term=';
 Object(__WEBPACK_IMPORTED_MODULE_7__config_js__["b" /* ready */])().then(_ => console.info('CONFIG LOADED!'));
+function onConnectionChanged() {
+    const online = navigator.onLine;
+    document.body.classList[online ? 'remove' : 'add']('offline');
+    document.querySelector('input').disabled = !online;
+    document.querySelector('input').placeholder = online ? 'Search...' : 'Offline...';
+    console.warn(online ? 'online :)' : 'offline :(');
+}
+onConnectionChanged();
 window.addEventListener('load', function () {
     let timeout;
-    document.querySelector('input').addEventListener('keyup', event => {
-        if (event.target instanceof HTMLInputElement) {
-            const query = event.target.value;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                doSearch(query);
-            }, 250);
-        }
+    const input = document.querySelector('input');
+    input.addEventListener('keyup', event => {
+        const query = input.value;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            doSearch(query);
+        }, 250);
     });
     renderUserShows();
-    window.addEventListener('online', notifyConnection);
-    window.addEventListener('offline', notifyConnection);
-    function notifyConnection(event) {
-        const addRemove = navigator.onLine ? 'remove' : 'add';
-        document.body.classList[addRemove]('offline');
-        document.querySelector('input').disabled = !navigator.onLine;
-        document.querySelector('input').placeholder = navigator.onLine ? 'Search...' : 'Offline...';
-        console.warn(navigator.onLine ? 'online :)' : 'offline :(');
-    }
+    window.addEventListener('online', onConnectionChanged);
+    window.addEventListener('offline', onConnectionChanged);
 });
 function doSearch(query) {
-    if (!query || query.length <= 2) {
-        return;
-    }
-    __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__["a" /* default */].search(query).then((results) => {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!query || query.length <= 2) {
+            return;
+        }
+        const results = yield __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__["a" /* default */].search(query);
         renderSearchResults(results);
-    }).catch(console.error);
+    });
 }
-/**
- * Render search result items
- * @param {SearchResults} json
- */
 function renderSearchResults(json) {
     const { results } = json;
     console.info(results);
@@ -188,9 +203,6 @@ function renderSearchResults(json) {
         resultsEl.innerHTML = '';
     }
 }
-/**
- * @param {Podcast|null} podcast
- */
 function renderShowFeed(podcast) {
     const root = document.querySelector('.show-list');
     if (podcast) {
@@ -237,13 +249,10 @@ document.addEventListener('click', (event) => {
         }
     }
 });
-/**
- * @param {Podcast} show
- */
 function saveShow(show) {
-    __WEBPACK_IMPORTED_MODULE_5__components_modal_js__["a" /* displayMessage */](`Saving ${show.title}`);
-    __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__["a" /* default */].getEpisodes(`${show.id}`)
-        .then((episodes) => {
+    return __awaiter(this, void 0, void 0, function* () {
+        __WEBPACK_IMPORTED_MODULE_5__components_modal_js__["a" /* displayMessage */](`Saving ${show.title}`);
+        const episodes = yield __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__["a" /* default */].getEpisodes(`${show.id}`);
         __WEBPACK_IMPORTED_MODULE_4__userData_js__["e" /* saveShow */](show, episodes);
         __WEBPACK_IMPORTED_MODULE_5__components_modal_js__["b" /* hideMessage */]();
     });
@@ -279,11 +288,6 @@ function saveShow(show) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__showPoster_js__ = __webpack_require__(0);
 
 
-/**
- * Render search result items
- * @param {Podcast[]} results
- * @return {string} html markup
- */
 const component = (results) => {
     return results.map(podcast => {
         console.info({ podcast });
@@ -307,9 +311,6 @@ const component = (results) => {
 /* unused harmony export component */
 
 /* harmony default export */ __webpack_exports__["a"] = (component);
-/**
- * @param {Podcast} pod
- */
 function getImage(pod) {
     if (pod.image_files && pod.image_files.length) {
         return pod.image_files[0].file.thumb.url;
@@ -328,11 +329,6 @@ function getImage(pod) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__showPoster_js__ = __webpack_require__(0);
 
 
-/**
- * Render search result items
- * @param {Podcast[]} userShows
- * @return {string} html markup
- */
 const component = (userShows) => {
     return userShows.map(podcast => {
         const image = getImage(podcast);
@@ -348,9 +344,6 @@ const component = (userShows) => {
 /* unused harmony export component */
 
 /* harmony default export */ __webpack_exports__["a"] = (component);
-/**
- * @param {Podcast} pod
- */
 function getImage(pod) {
     if (pod.image_files && pod.image_files.length) {
         return pod.image_files[0].file.thumb.url;
@@ -369,10 +362,6 @@ function getImage(pod) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__episode_js__ = __webpack_require__(7);
 
 
-/**
- *
- * @param {Podcast} show
- */
 const component = (show) => {
     const image = getImage(show);
     return `
@@ -387,9 +376,6 @@ const component = (show) => {
 /* unused harmony export component */
 
 /* harmony default export */ __webpack_exports__["a"] = (component);
-/**
- * @param {Podcast} pod
- */
 function getImage(pod) {
     if (pod.image_files && pod.image_files.length) {
         return pod.image_files[0].file.thumb.url;
@@ -406,7 +392,7 @@ function getImage(pod) {
 
 "use strict";
 
-/* harmony default export */ __webpack_exports__["a"] = ((/** @type {Episode}*/ episode) => {
+/* harmony default export */ __webpack_exports__["a"] = ((episode) => {
     const audio = episode.audio_files[0];
     return `
     <li class="show-item theme-dark-item-bg">
@@ -441,11 +427,6 @@ function getDaysAgoText(dateString) {
 
 const SHOWS = 'pod_shows';
 const SEARCH_RESULTS = 'search_results';
-/**
- *
- * @param {Podcast} showData
- * @param {Episode[]} items
- */
 const saveShow = (showData, items) => {
     const shows = getShows();
     const show = getShow(showData.rss_url);
@@ -461,49 +442,31 @@ const saveShow = (showData, items) => {
 };
 /* harmony export (immutable) */ __webpack_exports__["e"] = saveShow;
 
-/**
- * @return {Podcast[]}
- */
 const getShows = () => {
     const showData = localStorage.getItem(SHOWS);
-    return showData ? JSON.parse(showData) : [];
+    return JSON.parse(showData || '[]');
 };
 /* harmony export (immutable) */ __webpack_exports__["d"] = getShows;
 
-/**
- * @return {Podcast}
- */
 const getShow = (feedUrl) => {
     const shows = getShows();
     return shows.find((s) => s.rss_url === feedUrl);
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = getShow;
 
-/**
- * @param {string} id
- * @return {Episode[]}
- */
 const getShowFeed = (id) => {
     const items = JSON.parse(localStorage.getItem(`${id}`) || '[]');
     return items;
 };
 /* harmony export (immutable) */ __webpack_exports__["c"] = getShowFeed;
 
-/**
- * @param {Podcast[]} results
- */
 const setSearchResults = (results) => {
     const dataStr = JSON.stringify(results || []);
     localStorage.setItem(SEARCH_RESULTS, dataStr);
 };
 /* harmony export (immutable) */ __webpack_exports__["f"] = setSearchResults;
 
-/**
- * @param {string} feedUrl
- * @returns {Podcast}
- */
 const getSearchResult = (feedUrl) => {
-    /** @type {Podcast[]} */
     const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]');
     return results.find(pod => pod.rss_url === feedUrl);
 };
@@ -517,18 +480,21 @@ const getSearchResult = (feedUrl) => {
 
 "use strict";
 
-/** @type {HTMLElement} */
 const modal = document.querySelector('.modal');
-const displayMessage = (message, close) => {
-    const messageEl = modal.querySelector('.modal__message');
-    messageEl.innerHTML = message;
-    modal.style.display = 'block';
+const displayMessage = (message) => {
+    if (modal instanceof HTMLElement) {
+        const messageEl = modal.querySelector('.modal__message');
+        messageEl.innerHTML = message;
+        modal.style.display = 'block';
+    }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = displayMessage;
 
 const hideMessage = () => {
-    displayMessage('');
-    modal.style.display = 'none';
+    if (modal instanceof HTMLElement) {
+        displayMessage('');
+        modal.style.display = 'none';
+    }
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = hideMessage;
 
@@ -541,62 +507,64 @@ const hideMessage = () => {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_js__ = __webpack_require__(1);
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 // based on https://github.com/popuparchive/audiosearch-client-node/blob/master/index.js
 
 __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token');
 const host = __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get.bind(null, 'audio_service');
 function authorize() {
-    const tokenService = __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token_service');
-    return fetch(`${tokenService}/token`).then(res => res.json()).then((res) => {
-        console.log('Got access token...', res);
-        __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].set('token', res.access_token);
-        return res.access_token;
+    return __awaiter(this, void 0, void 0, function* () {
+        const tokenService = __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token_service');
+        const res = yield fetch(`${tokenService}/token`);
+        const data = yield res.json();
+        console.log('Got access token...', data);
+        __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].set('token', data.access_token);
+        return data.access_token;
     });
 }
 function base64Encode(str) {
     return btoa(str);
 }
 function get(path) {
-    var url = `${host()}/api/${path}`;
-    var options = {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')}`,
-            'User-Agent': 'request'
+    return __awaiter(this, void 0, void 0, function* () {
+        var url = `${host()}/api/${path}`;
+        var options = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')}`,
+                'User-Agent': 'request'
+            }
+        };
+        if (!__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')) {
+            yield authorize();
         }
-    };
-    if (__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')) {
-        return fetch(url, options).then(res => res.json());
-    }
-    else {
-        return authorize().then(() => get(path));
-    }
+        const res = yield fetch(url, options);
+        const data = yield res.json();
+        return data;
+    });
 }
 class AudioSearchClient {
-    /**
-     * @param {string} query
-     * @returns {Promise<SearchResults>}
-     * @memberof AudioSearchClient
-     */
     search(query) {
-        const timer = 'audioSearch';
-        console.time(timer);
-        return get(`search/shows/${encodeURI(query)}`)
-            .then(data => {
+        return __awaiter(this, void 0, void 0, function* () {
+            const timer = 'audioSearch';
+            console.time(timer);
+            const data = yield get(`search/shows/${encodeURI(query)}`);
             console.timeEnd(timer);
             return data;
         });
     }
-    /**
-     * @param {string} show_id
-     * @returns {Promise<Episode[]>}
-     * @memberof AudioSearchClient
-     */
     getEpisodes(show_id) {
-        const timer = 'getEpisodes';
-        console.time(timer);
-        return get(`shows/${show_id}/episodes`)
-            .then(data => {
+        return __awaiter(this, void 0, void 0, function* () {
+            const timer = 'getEpisodes';
+            console.time(timer);
+            const data = yield get(`shows/${show_id}/episodes`);
             console.timeEnd(timer);
             return data;
         });

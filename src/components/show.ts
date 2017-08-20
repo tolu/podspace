@@ -1,10 +1,6 @@
 import episodeComponent from './episode.js';
 
-/**
- * 
- * @param {Podcast} show 
- */
-export const component = (show) => {
+export const component = (show: Podcast) => {
   const image = getImage(show);
   return `
   <div>
@@ -17,10 +13,7 @@ export const component = (show) => {
 };
 export default component;
 
-/**
- * @param {Podcast} pod 
- */
-function getImage(pod){
+function getImage(pod: Podcast){
   if(pod.image_files && pod.image_files.length){
     return pod.image_files[0].file.thumb.url;
   }

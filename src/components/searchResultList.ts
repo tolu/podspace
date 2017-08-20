@@ -1,10 +1,6 @@
 import showPoster from './showPoster.js';
-/**
- * Render search result items
- * @param {Podcast[]} results
- * @return {string} html markup
- */
-export const component = (results) => {
+
+export const component = (results: Podcast[]) => {
   return results.map(podcast => {
     console.info({podcast});
     const image = getImage(podcast);
@@ -29,10 +25,7 @@ export const component = (results) => {
 };
 export default component;
 
-/**
- * @param {Podcast} pod 
- */
-function getImage(pod){
+function getImage(pod: Podcast){
   if(pod.image_files && pod.image_files.length){
     return pod.image_files[0].file.thumb.url;
   }

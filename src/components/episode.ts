@@ -1,5 +1,5 @@
 
-export default (/** @type {Episode}*/episode) => {
+export default (episode: Episode) => {
   const audio = episode.audio_files[0];
   return `
     <li class="show-item theme-dark-item-bg">
