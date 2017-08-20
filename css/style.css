@@ -11,17 +11,25 @@ img {
   pointer-events:none;
 }
 header {
-  padding: 0 10px;
+  padding: 10px;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+header h1 { margin: 0; margin-right: 20px; }
+header a.no-link {
+  display: block;
+  line-height: 1.5em;
 }
 
 .container { position: relative }
 
 .logo {
   display: inline-block;
-  width: 48px;
-  height: 48px;
-  background-image: url('../img/logo/48x48.png');
+  min-width: 48px;
+  min-height: 48px;
+  background: url('../img/logo/48x48.png') no-repeat;
   text-indent: 58px;
 }
 a.no-link {
@@ -29,13 +37,10 @@ a.no-link {
   color: inherit;
 }
 .search-box {
-  position: absolute;
-  right: 20px;
-  top: 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex-grow: 2;
 }
 .search-box input { font-size: 20px }
 .search-box input[disabled] { background-color: #aaa }

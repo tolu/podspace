@@ -23,7 +23,7 @@ function onConnectionChanged() {
     document.body.classList[online ? 'remove' : 'add']('offline');
     document.querySelector('input').disabled = !online;
     document.querySelector('input').placeholder = online ? 'Search...' : 'Offline...';
-    console.warn(online ? 'online :)' : 'offline :(');
+    console.info(`%c online:${online} `, `background: #${online ? '88d8b0' : 'ff6f69'};`);
 }
 onConnectionChanged();
 (function setupListeners() {
