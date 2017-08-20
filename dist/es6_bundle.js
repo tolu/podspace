@@ -534,6 +534,10 @@ function base64Encode(str) {
 }
 function get(path) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')) {
+            console.info('Refreshing API token...');
+            yield authorize();
+        }
         var url = `${host()}/api/${path}`;
         var options = {
             method: 'GET',
@@ -542,10 +546,12 @@ function get(path) {
                 'User-Agent': 'request'
             }
         };
-        if (!__WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].get('token')) {
-            yield authorize();
-        }
         const res = yield fetch(url, options);
+        if (!res.ok && res.status === 401) {
+            console.info('token might have expired, reset and try again');
+            __WEBPACK_IMPORTED_MODULE_0__config_js__["a" /* default */].set('token', '');
+            return get(path);
+        }
         const data = yield res.json();
         return data;
     });

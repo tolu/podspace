@@ -17,6 +17,10 @@ function base64Encode(str: string){
 }
 
 async function get(path: string){
+  if(!config.get('token')) {
+    console.info('Refreshing API token...');
+    await authorize();
+  }
   var url = `${host()}/api/${path}`;
   var options = {
     method: 'GET',
@@ -25,10 +29,12 @@ async function get(path: string){
       'User-Agent': 'request'
     }
   };
-  if(!config.get('token')) {
-    await authorize();
-  }
   const res = await fetch(url, options);
+  if(!res.ok && res.status === 401){
+    console.info('token might have expired, reset and try again');
+    config.set('token', '');
+    return get(path);
+  }
   const data = await res.json();
   return data;
 }
