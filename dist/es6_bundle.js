@@ -168,7 +168,7 @@ function onConnectionChanged() {
     console.warn(online ? 'online :)' : 'offline :(');
 }
 onConnectionChanged();
-window.addEventListener('load', function () {
+(function setupListeners() {
     let timeout;
     const input = document.querySelector('input');
     input.addEventListener('keyup', event => {
@@ -181,7 +181,7 @@ window.addEventListener('load', function () {
     renderUserShows();
     window.addEventListener('online', onConnectionChanged);
     window.addEventListener('offline', onConnectionChanged);
-});
+}());
 function doSearch(query) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!query || query.length <= 2) {

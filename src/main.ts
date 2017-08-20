@@ -21,7 +21,7 @@ function onConnectionChanged() {
 }
 onConnectionChanged();
 
-window.addEventListener('load', function() {
+(function setupListeners() {
   let timeout;
   const input = document.querySelector('input');
   input.addEventListener('keyup', event => {
@@ -34,7 +34,7 @@ window.addEventListener('load', function() {
   renderUserShows();
   window.addEventListener('online', onConnectionChanged);
   window.addEventListener('offline', onConnectionChanged);
-});
+}());
 
 async function doSearch(query){
   if(!query || query.length <= 2) {
