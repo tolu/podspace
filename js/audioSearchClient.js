@@ -3,20 +3,20 @@ import config from './config.js';
 config.get('token')
 const host = config.get.bind(null, 'audio_service');
 
-function authorize(){
+async function authorize(){
   const tokenService = config.get('token_service');
-  return fetch(`${tokenService}/token`).then(res => res.json()).then((res) => {
-    console.log('Got access token...', res);
-    config.set('token', res.access_token);
-    return res.access_token;
-  });
+  const res = await fetch(`${tokenService}/token`);
+  const data = await res.json();
+  console.log('Got access token...', data);
+  config.set('token', data.access_token);
+  return data.access_token;
 }
 
 function base64Encode(str){
   return btoa(str);
 }
 
-function get(path){
+async function get(path){
   var url = `${host()}/api/${path}`;
   var options = {
     method: 'GET',
@@ -25,41 +25,38 @@ function get(path){
       'User-Agent': 'request'
     }
   };
-  if(config.get('token')) {
-    return fetch(url, options).then(res => res.json());
-  } else {
-    return authorize().then(() => get(path));
+  if(!config.get('token')) {
+    await authorize();
   }
+  const res = await fetch(url, options);
+  const data = await res.json();
+  return data;
 }
 
 class AudioSearchClient {
   /**
-   * @param {string} query 
+   * @param {string} query
    * @returns {Promise<SearchResults>}
    * @memberof AudioSearchClient
    */
-  search(query) {
+  async search(query) {
     const timer = 'audioSearch';
     console.time(timer);
-    return get(`search/shows/${encodeURI(query)}`)
-      .then(data => {
-        console.timeEnd(timer);
-        return data;
-      });
+    const data = await get(`search/shows/${encodeURI(query)}`);
+    console.timeEnd(timer);
+    return data;
   }
   /**
-   * @param {string} show_id 
+   * @param {string} show_id
    * @returns {Promise<Episode[]>}
    * @memberof AudioSearchClient
    */
-  getEpisodes(show_id){
+  async getEpisodes(show_id){
     const timer = 'getEpisodes';
     console.time(timer);
-    return get(`shows/${show_id}/episodes`)
-      .then(data => {
-        console.timeEnd(timer);
-        return data;
-      });
+    const data = await get(`shows/${show_id}/episodes`);
+    console.timeEnd(timer);
+    return data;
   }
 }
 

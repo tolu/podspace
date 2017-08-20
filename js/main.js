@@ -12,6 +12,15 @@ import {ready} from './config.js';
 
 ready().then(_ => console.info('CONFIG LOADED!'));
 
+function onConnectionChanged(event) {
+  const online = navigator.onLine;
+  document.body.classList[online ? 'remove' : 'add']('offline');
+  document.querySelector('input').disabled = !online;
+  document.querySelector('input').placeholder = online ? 'Search...' : 'Offline...';
+  console.warn(online ? 'online :)' : 'offline :(');
+}
+onConnectionChanged();
+
 window.addEventListener('load', function() {
   let timeout;
   document.querySelector('input').addEventListener('keyup', event => {
@@ -24,24 +33,16 @@ window.addEventListener('load', function() {
     }
   });
   renderUserShows();
-  window.addEventListener('online', notifyConnection);
-  window.addEventListener('offline', notifyConnection);
-  function notifyConnection(event) {
-    const addRemove = navigator.onLine ? 'remove' : 'add';
-    document.body.classList[addRemove]('offline');
-    document.querySelector('input').disabled = !navigator.onLine;
-    document.querySelector('input').placeholder = navigator.onLine ? 'Search...' : 'Offline...';
-    console.warn(navigator.onLine ? 'online :)' : 'offline :(');
-  }
+  window.addEventListener('online', onConnectionChanged);
+  window.addEventListener('offline', onConnectionChanged);
 });
 
-function doSearch(query){
+async function doSearch(query){
   if(!query || query.length <= 2) {
     return;
   }
-  apiClient.search(query).then((results) => {
-    renderSearchResults(results);
-  }).catch(console.error);
+  const results = await apiClient.search(query);
+  renderSearchResults(results);
 }
 
 /**
@@ -61,7 +62,7 @@ function renderSearchResults(json){
 }
 
 /**
- * @param {Podcast|null} podcast 
+ * @param {Podcast|null} podcast
  */
 function renderShowFeed(podcast){
   const root = document.querySelector('.show-list');
@@ -115,11 +116,9 @@ document.addEventListener('click', (event) => {
 /**
  * @param {Podcast} show
  */
-function saveShow(show) {
+async function saveShow(show) {
   modal.displayMessage(`Saving ${show.title}`);
-  apiClient.getEpisodes(`${show.id}`)
-    .then((episodes) => {
-      userData.saveShow(show, episodes);
-      modal.hideMessage();
-    });
+  const episodes = await apiClient.getEpisodes(`${show.id}`);
+  userData.saveShow(show, episodes);
+  modal.hideMessage();
 }
