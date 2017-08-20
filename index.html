@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link rel="icon" href="img/logo_48x48.png">
+    <script type="module">
+      window.native_modules = true;
+    </script>
   </head>
   <body class="theme-dark-bg">
     <header class="color-spot-dark">
@@ -27,9 +30,6 @@
 
 
     <audio></audio>
-    <!-- serve modern js to browsers that get modules and a bundle for golden oldies  -->
-    <script type="module" src="js/main.js"></script>
-    <script nomodule src="dist/bundle.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         // https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
@@ -43,6 +43,18 @@
           });
         });
       }
+      /* serve modern js to browsers that get modules and a bundle for golden oldies */
+      window.addEventListener('load', () => {
+        const useBundle = !window.native_modules || localStorage.useBundle === 'true';
+        console.info(`Loading app as ${useBundle ? 'es6 bundle' : 'module' }`);
+        const script = document.createElement('script');
+        script.src = 'dist/es6_bundle.js';
+        if(!useBundle) {
+          script.src = 'dist/main.js';
+          script.type = 'module';
+        }
+        document.head.appendChild(script);
+      });
     </script>
   </body>
 </html>
