@@ -4,10 +4,12 @@
   "description": "a podcast pwa",
   "main": "index.js",
   "scripts": {
+    "start": "run-p serve micro transpile bundle",
+    "serve": "http-server",
     "micro": "cd ./packages/token_service && npm start",
-    "start": "http-server & npm run micro",
-    "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "tsc -w",
+    "bundle": "webpack -w",
+    "test": "tsc",
     "preinstall": "cd ./packages/token_service && npm i",
     "pre-commit": "echo 'Pre commit checks...'"
   },
@@ -30,8 +32,8 @@
   "homepage": "https://github.com/tolu/podspace#readme",
   "dependencies": {},
   "devDependencies": {
-    "awesome-typescript-loader": "^3.2.3",
     "http-server": "^0.10.0",
+    "npm-run-all": "^4.0.2",
     "pre-commit": "^1.2.2",
     "typescript": "^2.4.2",
     "webpack": "^3.5.5"
