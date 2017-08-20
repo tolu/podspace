@@ -21,7 +21,7 @@ header {
   display: inline-block;
   width: 48px;
   height: 48px;
-  background-image: url('../img/logo_48x48.png');
+  background-image: url('../img/logo/48x48.png');
   text-indent: 58px;
 }
 a.no-link {
@@ -106,7 +106,7 @@ a.no-link {
   height: 100%;
   width: 6px;
   display: inline-block;
-  
+
   -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
   animation: sk-stretchdelay 1.2s infinite ease-in-out;
 }
@@ -132,15 +132,15 @@ a.no-link {
 }
 
 @-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
   20% { -webkit-transform: scaleY(1.0) }
 }
 
 @keyframes sk-stretchdelay {
-  0%, 40%, 100% { 
+  0%, 40%, 100% {
     transform: scaleY(0.4);
     -webkit-transform: scaleY(0.4);
-  }  20% { 
+  }  20% {
     transform: scaleY(1.0);
     -webkit-transform: scaleY(1.0);
   }
@@ -180,4 +180,14 @@ a.no-link {
   padding: 30px;
   background-color: white;
   color: black;
+}
+
+/* Accessibility
+---------------------------------------------------------------- */
+.screen-reader {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip: rect(0, 0, 0, 0);
 }

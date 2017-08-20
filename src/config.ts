@@ -2,7 +2,7 @@
 const KEY = 'podspace_config';
 const config = JSON.parse(localStorage.getItem(KEY) || '{}');
 const promise = (async function getConfig() {
-  const res = await fetch(`${location.href}config/config.json`);
+  const res = await fetch(`${location.pathname}config/config.json`);
   const configData = await res.json();
   const env = /localhost/i.test(location.hostname) ?  'dev' : 'prod';
   Object.assign(config, configData[env]);

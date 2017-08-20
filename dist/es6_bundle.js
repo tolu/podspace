@@ -100,7 +100,7 @@ const KEY = 'podspace_config';
 const config = JSON.parse(localStorage.getItem(KEY) || '{}');
 const promise = (function getConfig() {
     return __awaiter(this, void 0, void 0, function* () {
-        const res = yield fetch(`${location.href}config/config.json`);
+        const res = yield fetch(`${location.pathname}config/config.json`);
         const configData = yield res.json();
         const env = /localhost/i.test(location.hostname) ? 'dev' : 'prod';
         Object.assign(config, configData[env]);
@@ -165,7 +165,7 @@ function onConnectionChanged() {
     document.body.classList[online ? 'remove' : 'add']('offline');
     document.querySelector('input').disabled = !online;
     document.querySelector('input').placeholder = online ? 'Search...' : 'Offline...';
-    console.warn(online ? 'online :)' : 'offline :(');
+    console.info(`%c online:${online} `, `background: #${online ? '88d8b0' : 'ff6f69'};`);
 }
 onConnectionChanged();
 (function setupListeners() {

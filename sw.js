@@ -7,14 +7,18 @@ const appShellFiles = [
   `${swScope}/`,
   // CSS etc
   `${swScope}/css/style.css`,
-  `${swScope}/img/logo_48x48.png`,
-  // CONFIG
+  `${swScope}/img/logo/48x48.png`,
+  // CONFIG / MANIFEST
+  `${swScope}/manifest.json`,
   `${swScope}/config/config.json`,
   // JS BUNDLE
   `${swScope}/dist/es6_bundle.js`,
   // JS FILES
   `${swScope}/dist/main.js`,
   `${swScope}/dist/audioPlayer.js`,
+  `${swScope}/dist/userData.js`,
+  `${swScope}/dist/config.js`,
+  `${swScope}/dist/audioSearchClient.js`,
 ];
 
 const log = (...args) => {

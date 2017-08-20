@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" href="img/logo_48x48.png">
-    <script type="module">
-      window.native_modules = true;
-    </script>
+    <link rel="icon" href="img/logo/48x48.png">
+    <!-- web app manifest etc -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#85d5ca">
+    <!-- used to check if browser supports modules natively -->
+    <script type="module">window.native_modules = true;</script>
   </head>
   <body class="theme-dark-bg">
     <header class="color-spot-dark">
-      <h1 class="logo"><a class="no-link" href="#home">PodSpace</a></h1>
+        <a class="no-link" href="#home"><h1 class="logo">PodSpace</h1></a>
       <div class="search-box">
-        <input type="text" name="search" value="", placeholder="Search...">
+        <label class="screen-reader" for="search">Search...</label>
+        <input id="search" type="text" name="search" value="" placeholder="Search...">
       </div>
     </header>
     <div class="container">
@@ -54,6 +57,19 @@
           script.type = 'module';
         }
         document.head.appendChild(script);
+      });
+      /* keep track of if users add to home screen */
+      window.addEventListener('beforeinstallprompt', function(e) {
+        // beforeInstallPrompt Event fired
+        // e: BeforeInstallPromptEvent ({ platforms: [], userChoice: Promise, prompt: Function })
+        e.userChoice.then(function(choiceResult) {
+          if(choiceResult.outcome == 'dismissed') {
+            console.info('User cancelled home screen install');
+          }
+          else {
+            console.info('User added to home screen');
+          }
+        });
       });
     </script>
   </body>
