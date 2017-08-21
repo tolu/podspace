@@ -23,7 +23,7 @@ function updateMediaSessionData(episode: Episode, audio: HTMLAudioElement) {
     console.warn('Client does not support media session api');
     return;
   }
-episode.image_urls.thumb
+
   navigator.mediaSession.metadata = new MediaMetadata({
     title: episode.title,
     artist: episode.show_title,
@@ -40,16 +40,13 @@ episode.image_urls.thumb
   navigator.mediaSession.setActionHandler('pause', () => {
     audio.pause();
   });
+  const stepTime = 15;
   navigator.mediaSession.setActionHandler('seekbackward', () => {
-    const time = Math.max(audio.currentTime - 15, 0);
+    audio.currentTime = Math.max(audio.currentTime - stepTime, 0);
   });
   navigator.mediaSession.setActionHandler('seekforward', () => {
-    const time = Math.max(audio.currentTime - 15, 0);
+    audio.currentTime = Math.min(audio.currentTime + stepTime, audio.duration);
   });
-  navigator.mediaSession.setActionHandler('previoustrack', () => {
-    // nope
-  });
-  navigator.mediaSession.setActionHandler('nexttrack', () => {
-    // not until we have a queue
-  });
+  navigator.mediaSession.setActionHandler('previoustrack', null); // () => {});
+  navigator.mediaSession.setActionHandler('nexttrack', null); // () => {});
 }
