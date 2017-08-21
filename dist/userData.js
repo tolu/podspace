@@ -34,3 +34,7 @@ export const getSearchResult = (feedUrl) => {
     const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]');
     return results.find(pod => pod.rss_url === feedUrl);
 };
+export const getEpisode = (showId, episodeId) => {
+    const showFeed = getShowFeed(showId);
+    return showFeed.find(ep => `${ep.id}` === episodeId);
+};

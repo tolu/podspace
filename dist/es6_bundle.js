@@ -196,7 +196,7 @@ function renderSearchResults(json) {
     console.info(results);
     const resultsEl = document.querySelector('.search-results');
     if (results) {
-        __WEBPACK_IMPORTED_MODULE_4__userData_js__["f" /* setSearchResults */](results);
+        __WEBPACK_IMPORTED_MODULE_4__userData_js__["g" /* setSearchResults */](results);
         resultsEl.innerHTML = Object(__WEBPACK_IMPORTED_MODULE_1__components_searchResultList_js__["a" /* default */])(results);
     }
     else {
@@ -206,7 +206,7 @@ function renderSearchResults(json) {
 function renderShowFeed(podcast) {
     const root = document.querySelector('.show-list');
     if (podcast) {
-        podcast.items = __WEBPACK_IMPORTED_MODULE_4__userData_js__["c" /* getShowFeed */](`${podcast.id}`);
+        podcast.items = __WEBPACK_IMPORTED_MODULE_4__userData_js__["d" /* getShowFeed */](`${podcast.id}`);
         root.innerHTML = Object(__WEBPACK_IMPORTED_MODULE_3__components_show_js__["a" /* default */])(podcast);
     }
     else {
@@ -214,7 +214,7 @@ function renderShowFeed(podcast) {
     }
 }
 function renderUserShows() {
-    const shows = __WEBPACK_IMPORTED_MODULE_4__userData_js__["d" /* getShows */]();
+    const shows = __WEBPACK_IMPORTED_MODULE_4__userData_js__["e" /* getShows */]();
     const resultsEl = document.querySelector('.search-results');
     resultsEl.innerHTML = Object(__WEBPACK_IMPORTED_MODULE_2__components_userShowList_js__["a" /* default */])(shows);
 }
@@ -233,18 +233,21 @@ document.addEventListener('click', (event) => {
         event.preventDefault();
         // @ts-ignore
         const feedUrl = event.target.href;
-        const show = __WEBPACK_IMPORTED_MODULE_4__userData_js__["a" /* getSearchResult */](feedUrl);
+        const show = __WEBPACK_IMPORTED_MODULE_4__userData_js__["b" /* getSearchResult */](feedUrl);
         saveShow(show);
     }
     if (event.target.matches('.user-show .podcast a')) {
         event.preventDefault();
         // @ts-ignore
         const feedUrl = event.target.href;
-        renderShowFeed(__WEBPACK_IMPORTED_MODULE_4__userData_js__["b" /* getShow */](feedUrl));
+        renderShowFeed(__WEBPACK_IMPORTED_MODULE_4__userData_js__["c" /* getShow */](feedUrl));
     }
-    if (event.target.matches('.play[data-url]')) {
+    if (event.target.matches('.play[data-episode]')) {
         [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
-        if (__WEBPACK_IMPORTED_MODULE_0__audioPlayer_js__["a" /* default */].play(event.target.getAttribute('data-url'))) {
+        const showId = event.target.getAttribute('data-show');
+        const episodeId = event.target.getAttribute('data-episode');
+        const episode = __WEBPACK_IMPORTED_MODULE_4__userData_js__["a" /* getEpisode */](showId, episodeId);
+        if (__WEBPACK_IMPORTED_MODULE_0__audioPlayer_js__["a" /* default */].play(episode)) {
             event.target.closest('.show-item').classList.add('playing');
         }
     }
@@ -253,7 +256,7 @@ function saveShow(show) {
     return __awaiter(this, void 0, void 0, function* () {
         __WEBPACK_IMPORTED_MODULE_5__components_modal_js__["a" /* displayMessage */](`Saving ${show.title}`);
         const episodes = yield __WEBPACK_IMPORTED_MODULE_6__audioSearchClient_js__["a" /* default */].getEpisodes(`${show.id}`);
-        __WEBPACK_IMPORTED_MODULE_4__userData_js__["e" /* saveShow */](show, episodes);
+        __WEBPACK_IMPORTED_MODULE_4__userData_js__["f" /* saveShow */](show, episodes);
         __WEBPACK_IMPORTED_MODULE_5__components_modal_js__["b" /* hideMessage */]();
     });
 }
@@ -265,11 +268,14 @@ function saveShow(show) {
 
 "use strict";
 
+const supportsMediaSession = 'mediaSession' in navigator;
 /* harmony default export */ __webpack_exports__["a"] = ({
-    play(showMediaUrl) {
+    play(episode) {
         const audio = document.querySelector('audio');
-        if (audio.currentSrc !== showMediaUrl) {
-            audio.src = showMediaUrl;
+        const mp3Url = episode.audio_files[0].mp3;
+        if (audio.currentSrc !== mp3Url) {
+            audio.src = mp3Url;
+            updateMediaSessionData(episode, audio);
         }
         else if (audio.ended) {
             audio.currentTime = 0;
@@ -278,6 +284,40 @@ function saveShow(show) {
         return !audio.paused;
     }
 });
+function updateMediaSessionData(episode, audio) {
+    if (!supportsMediaSession) {
+        console.warn('Client does not support media session api');
+        return;
+    }
+    episode.image_urls.thumb;
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: episode.title,
+        artist: episode.show_title,
+        album: '',
+        artwork: [
+            { src: episode.image_urls.thumb, sizes: '100x100', type: 'image/jpg' },
+            { src: episode.image_urls.full, sizes: '600x600', type: 'image/jpg' },
+        ]
+    });
+    navigator.mediaSession.setActionHandler('play', () => {
+        audio.play();
+    });
+    navigator.mediaSession.setActionHandler('pause', () => {
+        audio.pause();
+    });
+    navigator.mediaSession.setActionHandler('seekbackward', () => {
+        const time = Math.max(audio.currentTime - 15, 0);
+    });
+    navigator.mediaSession.setActionHandler('seekforward', () => {
+        const time = Math.max(audio.currentTime - 15, 0);
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+        // nope
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+        // not until we have a queue
+    });
+}
 
 
 /***/ }),
@@ -401,7 +441,7 @@ function getImage(pod) {
         <div class="show-item__description">${episode.description}</div>
         <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
       </div>
-      <div class="play" data-url=${audio.mp3}></div>
+      <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
     </li>
   `.trim();
 });
@@ -440,37 +480,43 @@ const saveShow = (showData, items) => {
     localStorage.setItem(`${showData.id}`, JSON.stringify(items));
     localStorage.setItem(SHOWS, JSON.stringify(shows));
 };
-/* harmony export (immutable) */ __webpack_exports__["e"] = saveShow;
+/* harmony export (immutable) */ __webpack_exports__["f"] = saveShow;
 
 const getShows = () => {
     const showData = localStorage.getItem(SHOWS);
     return JSON.parse(showData || '[]');
 };
-/* harmony export (immutable) */ __webpack_exports__["d"] = getShows;
+/* harmony export (immutable) */ __webpack_exports__["e"] = getShows;
 
 const getShow = (feedUrl) => {
     const shows = getShows();
     return shows.find((s) => s.rss_url === feedUrl);
 };
-/* harmony export (immutable) */ __webpack_exports__["b"] = getShow;
+/* harmony export (immutable) */ __webpack_exports__["c"] = getShow;
 
 const getShowFeed = (id) => {
     const items = JSON.parse(localStorage.getItem(`${id}`) || '[]');
     return items;
 };
-/* harmony export (immutable) */ __webpack_exports__["c"] = getShowFeed;
+/* harmony export (immutable) */ __webpack_exports__["d"] = getShowFeed;
 
 const setSearchResults = (results) => {
     const dataStr = JSON.stringify(results || []);
     localStorage.setItem(SEARCH_RESULTS, dataStr);
 };
-/* harmony export (immutable) */ __webpack_exports__["f"] = setSearchResults;
+/* harmony export (immutable) */ __webpack_exports__["g"] = setSearchResults;
 
 const getSearchResult = (feedUrl) => {
     const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]');
     return results.find(pod => pod.rss_url === feedUrl);
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = getSearchResult;
+/* harmony export (immutable) */ __webpack_exports__["b"] = getSearchResult;
+
+const getEpisode = (showId, episodeId) => {
+    const showFeed = getShowFeed(showId);
+    return showFeed.find(ep => `${ep.id}` === episodeId);
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = getEpisode;
 
 
 

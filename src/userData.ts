@@ -38,3 +38,8 @@ export const getSearchResult = (feedUrl: string) => {
   const results = JSON.parse(localStorage.getItem(SEARCH_RESULTS) || '[]') as Podcast[];
   return results.find(pod => pod.rss_url === feedUrl);
 };
+
+export const getEpisode = (showId: string, episodeId: string) => {
+  const showFeed = getShowFeed(showId);
+  return showFeed.find(ep => `${ep.id}` === episodeId);
+}

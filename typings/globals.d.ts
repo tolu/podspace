@@ -66,3 +66,26 @@ interface Episode {
     ui: string //  "https://www.audiosear.ch/a/acd95/ruben-stlund"
   }
 }
+
+/*  MEDIA SESSION EXTENSION
+---------------------------------------------- */
+interface Navigator {
+  mediaSession: {
+    metadata: MediaMetadata
+    setActionHandler(event: MediaSessionEvent, handler: Function)
+  }
+}
+type MediaSessionEvent = 'play' | 'pause' | 'seekbackward' | 'seekforward' | 'previoustrack' | 'nexttrack';
+interface MediaMetadataObject {
+  title: string
+  artist: string
+  album: string
+  artwork: [{
+    src: string
+    sizes: string
+    type: string
+  }]
+}
+declare class MediaMetadata {
+  constructor(metadata: MediaMetadataObject)
+}

@@ -96,10 +96,14 @@ document.addEventListener('click', (event) => {
     const feedUrl = (event.target as HTMLLinkElement).href;
     renderShowFeed(userData.getShow(feedUrl));
   }
-  if(event.target.matches('.play[data-url]')) {
+  if(event.target.matches('.play[data-episode]')) {
     [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
 
-    if(audioPlayer.play(event.target.getAttribute('data-url'))) {
+    const showId = event.target.getAttribute('data-show');
+    const episodeId = event.target.getAttribute('data-episode');
+    const episode = userData.getEpisode(showId, episodeId);
+
+    if(audioPlayer.play(episode)) {
       event.target.closest('.show-item').classList.add('playing');
     }
   }
