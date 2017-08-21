@@ -13,6 +13,17 @@ export default {
         }
         audio.paused ? audio.play() : audio.pause();
         return !audio.paused;
+    },
+    offline(episode) {
+        const mediaUrl = `${episode.audio_files[0].audiosearch_mp3}?offline=true`;
+        episode.audio_files[0].audiosearch_mp3 = mediaUrl;
+        // keep track of that this file is downloaded somehow?
+        // mark that episode is downloaded
+        /* these approaches works if remote server sets CORS headers */
+        // navigator.serviceWorker.controller.postMessage({type:'save_offline', mp3: mediaUrl });
+        // const audio = document.createElement('audio');
+        // audio.src = `${mediaUrl}?offline=true`;
+        // saveEpisode(episode);
     }
 };
 function updateMediaSessionData(episode, audio) {

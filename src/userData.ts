@@ -43,3 +43,13 @@ export const getEpisode = (showId: string, episodeId: string) => {
   const showFeed = getShowFeed(showId);
   return showFeed.find(ep => `${ep.id}` === episodeId);
 }
+
+export const saveEpisode = (episode: Episode) => {
+  const podcast = getShows().find((pod) => pod.id === episode.show_id);
+  const episodes = getShowFeed(`${episode.show_id}`);
+  const oldEpisode = episodes.find((ep) => ep.id === episode.id);
+  const index = episodes.indexOf(oldEpisode);
+  // set updated episode in place of old
+  Object.assign(episodes, {[`${index}`]: episode});
+  saveShow(podcast, episodes);
+}

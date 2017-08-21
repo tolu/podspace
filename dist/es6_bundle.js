@@ -242,13 +242,18 @@ document.addEventListener('click', (event) => {
         const feedUrl = event.target.href;
         renderShowFeed(__WEBPACK_IMPORTED_MODULE_4__userData_js__["c" /* getShow */](feedUrl));
     }
-    if (event.target.matches('.play[data-episode]')) {
-        [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
+    if (event.target.matches('[data-episode][data-show]')) {
         const showId = event.target.getAttribute('data-show');
         const episodeId = event.target.getAttribute('data-episode');
         const episode = __WEBPACK_IMPORTED_MODULE_4__userData_js__["a" /* getEpisode */](showId, episodeId);
-        if (__WEBPACK_IMPORTED_MODULE_0__audioPlayer_js__["a" /* default */].play(episode)) {
-            event.target.closest('.show-item').classList.add('playing');
+        if (event.target.matches('.play')) {
+            [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
+            if (__WEBPACK_IMPORTED_MODULE_0__audioPlayer_js__["a" /* default */].play(episode)) {
+                event.target.closest('.show-item').classList.add('playing');
+            }
+        }
+        if (event.target.matches('.download')) {
+            __WEBPACK_IMPORTED_MODULE_0__audioPlayer_js__["a" /* default */].offline(episode);
         }
     }
 });
@@ -282,6 +287,17 @@ const supportsMediaSession = 'mediaSession' in navigator;
         }
         audio.paused ? audio.play() : audio.pause();
         return !audio.paused;
+    },
+    offline(episode) {
+        const mediaUrl = `${episode.audio_files[0].audiosearch_mp3}?offline=true`;
+        episode.audio_files[0].audiosearch_mp3 = mediaUrl;
+        // keep track of that this file is downloaded somehow?
+        // mark that episode is downloaded
+        /* these approaches works if remote server sets CORS headers */
+        // navigator.serviceWorker.controller.postMessage({type:'save_offline', mp3: mediaUrl });
+        // const audio = document.createElement('audio');
+        // audio.src = `${mediaUrl}?offline=true`;
+        // saveEpisode(episode);
     }
 });
 function updateMediaSessionData(episode, audio) {
@@ -438,6 +454,7 @@ function getImage(pod) {
         <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
       </div>
       <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
+      <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
     </li>
   `.trim();
 });
@@ -513,6 +530,17 @@ const getEpisode = (showId, episodeId) => {
     return showFeed.find(ep => `${ep.id}` === episodeId);
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = getEpisode;
+
+const saveEpisode = (episode) => {
+    const podcast = getShows().find((pod) => pod.id === episode.show_id);
+    const episodes = getShowFeed(`${episode.show_id}`);
+    const oldEpisode = episodes.find((ep) => ep.id === episode.id);
+    const index = episodes.indexOf(oldEpisode);
+    // set updated episode in place of old
+    Object.assign(episodes, { [`${index}`]: episode });
+    saveShow(podcast, episodes);
+};
+/* unused harmony export saveEpisode */
 
 
 

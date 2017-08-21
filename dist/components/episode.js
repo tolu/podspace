@@ -9,6 +9,7 @@ export default (episode) => {
         <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
       </div>
       <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
+      <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
     </li>
   `.trim();
 };

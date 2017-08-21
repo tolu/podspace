@@ -38,9 +38,11 @@
       if ('serviceWorker' in navigator) {
         // https://developers.google.com/web/fundamentals/getting-started/primers/service-workers
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('sw.js').then(registration => {
+          const swUrl = `sw.js?t=${Date.now()}`; // cache bust with timestamp
+          navigator.serviceWorker.register(swUrl).then(registration => {
             // Registration was successful
             console.info('ServiceWorker registered with scope: ', registration.scope);
+            registration.update();
           }, err => {
             // registration failed :(
             console.log('ServiceWorker registration failed: ', err);

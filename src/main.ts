@@ -96,15 +96,18 @@ document.addEventListener('click', (event) => {
     const feedUrl = (event.target as HTMLLinkElement).href;
     renderShowFeed(userData.getShow(feedUrl));
   }
-  if(event.target.matches('.play[data-episode]')) {
-    [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
-
+  if(event.target.matches('[data-episode][data-show]')) {
     const showId = event.target.getAttribute('data-show');
     const episodeId = event.target.getAttribute('data-episode');
     const episode = userData.getEpisode(showId, episodeId);
-
-    if(audioPlayer.play(episode)) {
-      event.target.closest('.show-item').classList.add('playing');
+    if(event.target.matches('.play')) {
+      [].slice.call(document.querySelectorAll('.playing')).forEach((i) => i.classList.remove('playing'));
+      if(audioPlayer.play(episode)) {
+        event.target.closest('.show-item').classList.add('playing');
+      }
+    }
+    if(event.target.matches('.download')) {
+      audioPlayer.offline(episode);
     }
   }
 });

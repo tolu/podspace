@@ -38,20 +38,38 @@ Promise.prototype.timeout = function(number){
 
 // INSTALL
 self.addEventListener('install', event => {
-  info('SW install...');
+  info('onInstall...');
   caches.delete(FILE_CACHE);
   cacheAppShell(event);
+});
+// Service Worker Active
+self.addEventListener('activate', function(event){
+  info('onActivated!');
+});
+// on message
+self.addEventListener('message', function(event) {
+  if(event.data.type === 'save_offline') {
+    info('Caching offline disabled, need CORS headers on audiosearch endpoint', event.data.mp3);
+    // cacheFile(event, event.data.mp3);
+  }
 });
 
 // ENABLE OFFLINE
 function cacheAppShell(event) {
   event.waitUntil(
     caches.open(FILE_CACHE)
-      .then(cache => cache.addAll(appShellFiles))
-      .then(_ => info('File cache completed...'))
-      .then(_ => self.skipWaiting())
+    .then(cache => cache.addAll(appShellFiles))
+    .then(_ => info('File cache completed...'))
+    .then(_ => self.skipWaiting())
   );
 }
+// function cacheFile(event, file) {
+//   event.waitUntil(
+//     caches.open(DATA_CACHE)
+//     .then(cache => cache.add(file))
+//     .then(_ => info(`File (${file}) cached!`))
+//   );
+// }
 
 // SETUP DATA CACHE
 self.addEventListener('fetch', event => {

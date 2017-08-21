@@ -150,23 +150,55 @@ a.no-link {
     -webkit-transform: scaleY(1.0);
   }
 }
-
+/* ICONS
+---------------------------------------------------------------- */
 .play {
   width: 18px;
   height: 24px;
   border-top: 12px solid transparent;
-  border-left: 18px solid #fff;
+  border-left: 18px solid #ccc;
   border-bottom: 12px solid transparent;
   cursor: pointer;
   border-right: none;
 }
 .playing .play {
-  border-right: 6px solid #fff;
-  border-left: 6px solid #fff;
+  border-right: 6px solid #ccc;
+  border-left: 6px solid #ccc;
   border-top: none;
   border-bottom: none;
 }
+.icon {
+  height: 40px;
+  width: 40px;
+  display: block;
+  position: relative;
+  margin: auto 10px;
+}
+.icon-dl:before{
+  content:'';
+  height:0;
+  width:0;
+  display:block;
+  border:10px transparent solid;
+  border-bottom-width:0;
+  border-top-color:#ccc;
+  position:absolute;
+  bottom:5px;
+  left:0px;
+ }
 
+.icon-dl:after{
+  content:'';
+  height:15px;
+  width:10px;
+  display:block;
+  background:#ccc;
+  position:absolute;
+  top:10px; left:5px;
+}
+
+/* ICONS
+---------------------------------------------------------------- */
 .modal {
   display: none; /* displayed with js */
   position: fixed;
