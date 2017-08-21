@@ -34,7 +34,7 @@ onConnectionChanged();
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             doSearch(query);
-        }, 250);
+        }, 500);
     });
     renderUserShows();
     window.addEventListener('online', onConnectionChanged);

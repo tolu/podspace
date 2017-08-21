@@ -176,7 +176,7 @@ onConnectionChanged();
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             doSearch(query);
-        }, 250);
+        }, 500);
     });
     renderUserShows();
     window.addEventListener('online', onConnectionChanged);
@@ -272,7 +272,7 @@ const supportsMediaSession = 'mediaSession' in navigator;
 /* harmony default export */ __webpack_exports__["a"] = ({
     play(episode) {
         const audio = document.querySelector('audio');
-        const mp3Url = episode.audio_files[0].mp3;
+        const mp3Url = episode.audio_files[0].audiosearch_mp3;
         if (audio.currentSrc !== mp3Url) {
             audio.src = mp3Url;
             updateMediaSessionData(episode, audio);

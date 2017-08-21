@@ -3,7 +3,7 @@ const supportsMediaSession = 'mediaSession' in navigator;
 export default {
     play(episode) {
         const audio = document.querySelector('audio');
-        const mp3Url = episode.audio_files[0].mp3;
+        const mp3Url = episode.audio_files[0].audiosearch_mp3;
         if (audio.currentSrc !== mp3Url) {
             audio.src = mp3Url;
             updateMediaSessionData(episode, audio);

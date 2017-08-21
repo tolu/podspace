@@ -169,11 +169,12 @@ a.no-link {
 
 .modal {
   display: none; /* displayed with js */
-  position: absolute;
-  top: -20px;
+  position: fixed;
+  top: 0;
   left: 0;
-  right: 0;
-  height: 81vh;
+  width: 100%;
+  height: 100%;
+
 }
 .modal__content {
   display: flex;
