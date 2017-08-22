@@ -2,14 +2,19 @@
 export default (episode) => {
     const audio = episode.audio_files[0];
     return `
-    <li class="show-item theme-dark-item-bg">
-      <div>
-        <h3 class="show-item__title">${episode.title}</h3>
-        <div class="show-item__description">${episode.description}</div>
-        <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
+    <li class="show-item theme-dark-item-bg" id="${episode.id}">
+      <div class="show-info">
+        <div>
+          <h3 class="show-item__title">${episode.title}</h3>
+          <div class="show-item__description">${episode.description}</div>
+          <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
+        </div>
+        <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
+        <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
       </div>
-      <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
-      <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
+      <div class="episode-progress-wrapper">
+        <div class="episode-progress"></div>
+      </div>
     </li>
   `.trim();
 };

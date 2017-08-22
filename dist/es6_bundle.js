@@ -281,6 +281,9 @@ const supportsMediaSession = 'mediaSession' in navigator;
         if (audio.currentSrc !== mp3Url) {
             audio.src = mp3Url;
             updateMediaSessionData(episode, audio);
+            audio.ontimeupdate = () => {
+                console.log(`TIME UPDATE ${episode.title}`);
+            };
         }
         else if (audio.ended) {
             audio.currentTime = 0;
@@ -329,6 +332,10 @@ function updateMediaSessionData(episode, audio) {
     });
     navigator.mediaSession.setActionHandler('previoustrack', null); // () => {});
     navigator.mediaSession.setActionHandler('nexttrack', null); // () => {});
+}
+function updateProgress(progressEl, audio) {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressEl.style.width = `${percent}%`;
 }
 
 
@@ -447,14 +454,19 @@ function getImage(pod) {
 /* harmony default export */ __webpack_exports__["a"] = ((episode) => {
     const audio = episode.audio_files[0];
     return `
-    <li class="show-item theme-dark-item-bg">
-      <div>
-        <h3 class="show-item__title">${episode.title}</h3>
-        <div class="show-item__description">${episode.description}</div>
-        <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
+    <li class="show-item theme-dark-item-bg" id="${episode.id}">
+      <div class="show-info">
+        <div>
+          <h3 class="show-item__title">${episode.title}</h3>
+          <div class="show-item__description">${episode.description}</div>
+          <div class="show-item__time">${getDaysAgoText(episode.date_created)} - <small>${audio.duration}</small></div>
+        </div>
+        <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
+        <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
       </div>
-      <div class="play" data-show=${episode.show_id} data-episode=${episode.id}></div>
-      <!-- <div class="icon icon-dl download" data-show=${episode.show_id} data-episode=${episode.id}></div> -->
+      <div class="episode-progress-wrapper">
+        <div class="episode-progress"></div>
+      </div>
     </li>
   `.trim();
 });

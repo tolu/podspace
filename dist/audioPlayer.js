@@ -7,6 +7,9 @@ export default {
         if (audio.currentSrc !== mp3Url) {
             audio.src = mp3Url;
             updateMediaSessionData(episode, audio);
+            audio.ontimeupdate = () => {
+                console.log(`TIME UPDATE ${episode.title}`);
+            };
         }
         else if (audio.ended) {
             audio.currentTime = 0;
@@ -55,4 +58,8 @@ function updateMediaSessionData(episode, audio) {
     });
     navigator.mediaSession.setActionHandler('previoustrack', null); // () => {});
     navigator.mediaSession.setActionHandler('nexttrack', null); // () => {});
+}
+function updateProgress(progressEl, audio) {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressEl.style.width = `${percent}%`;
 }
